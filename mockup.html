@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PAPK – Simple UI Mockup</title>
+    <!-- Bootstrap 5 CDN for quick styling -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { padding-top: 4rem; }
+        .sidebar { height: 100vh; position: sticky; top: 4rem; }
+        .nav-link.active { background-color: #e9ecef; }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">PAPK Management</a>
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="#">Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="container-fluid">
+  <div class="row">
+    <!-- Sidebar – will differ per role (admin/user) -->
+    <nav class="col-2 bg-light sidebar py-3">
+      <div class="list-group">
+        <!-- Admin menu example -->
+        <a href="#" class="list-group-item list-group-item-action active">Dashboard</a>
+        <a href="#" class="list-group-item list-group-item-action">Anggota</a>
+        <a href="#" class="list-group-item list-group-item-action">Pengajuan</a>
+        <a href="#" class="list-group-item list-group-item-action">Pengumuman</a>
+        <a href="#" class="list-group-item list-group-item-action">Export/Import</a>
+        <a href="#" class="list-group-item list-group-item-action">Log Aktivitas</a>
+      </div>
+    </nav>
+    <main class="col-10">
+      <h1 class="mt-4">Dashboard Admin</h1>
+      <p>Ringkasan statistik (Chart.js placeholder)</p>
+      <div class="row g-3">
+        <div class="col-md-4">
+          <div class="card text-center">
+            <div class="card-body">
+              <h5 class="card-title">Total Anggota</h5>
+              <p class="display-4">0</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card text-center">
+            <div class="card-body">
+              <h5 class="card-title">Pengajuan Pending</h5>
+              <p class="display-4">0</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card text-center">
+            <div class="card-body">
+              <h5 class="card-title">Pengumuman Terbaru</h5>
+              <p class="display-4">0</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr class="my-5"/>
+      <h2>Daftar Anggota (contoh tabel)</h2>
+      <table class="table table-sm table-hover">
+        <thead class="table-light">
+          <tr><th>#</th><th>NRP/NIA</th><th>Nama</th><th>Pangkat</th><th>Satuan</th><th>Status</th><th>Aksi</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>123456</td><td>Nama 1</td><td>Mayor</td><td>Infanteri</td><td>Aktif</td><td>
+            <button class="btn btn-sm btn-primary">Detail</button>
+            <button class="btn btn-sm btn-warning">Edit</button>
+            <button class="btn btn-sm btn-danger">Hapus</button>
+          </td></tr>
+          <!-- more rows -->
+        </tbody>
+      </table>
+    </main>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -7,9 +7,24 @@ requireRole('admin');
 // ---------- Handle POST actions (add / edit) ----------
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
+    
+    // Upload foto anggota (jika ada file diunggah)
+    $uploadedPhoto = null;
+    if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
+        $allowedExts = ['jpg', 'jpeg', 'png', 'webp'];
+        $ext = strtolower(pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION));
+        if (in_array($ext, $allowedExts) && $_FILES['photo']['size'] <= 2 * 1024 * 1024) {
+            $filename = 'member_' . time() . '_' . rand(100, 999) . '.' . $ext;
+            $dest = __DIR__ . '/../uploads/avatars/' . $filename;
+            if (move_uploaded_file($_FILES['photo']['tmp_name'], $dest)) {
+                $uploadedPhoto = 'uploads/avatars/' . $filename;
+            }
+        }
+    }
+
     if ($action === 'add') {
-        $stmt = $pdo->prepare("INSERT INTO members (nrp_nia, name, `rank`, unit, location_name, phone, status) 
-                              VALUES (:nrp, :name, :rank, :unit, :loc, :phone, :status)");
+        $stmt = $pdo->prepare("INSERT INTO members (nrp_nia, name, `rank`, unit, location_name, phone, status, photo_path) 
+                              VALUES (:nrp, :name, :rank, :unit, :loc, :phone, :status, :photo)");
         $stmt->execute([
             ':nrp'   => trim($_POST['nrp_nia']),
             ':name'  => trim($_POST['name']),
@@ -18,23 +33,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':loc'   => trim($_POST['location_name'] ?? ''),
             ':phone' => trim($_POST['phone'] ?? ''),
             ':status'=> $_POST['status'] ?? 'aktif',
+            ':photo' => $uploadedPhoto
         ]);
         setFlash('Anggota berhasil ditambahkan.', 'success');
         header('Location: dashboard.php');
         exit();
     }
     if ($action === 'edit') {
-        $stmt = $pdo->prepare("UPDATE members SET nrp_nia=:nrp, name=:name, `rank`=:rank, unit=:unit, location_name=:loc, phone=:phone, status=:status WHERE id=:id");
-        $stmt->execute([
-            ':id'    => $_POST['id'],
-            ':nrp'   => trim($_POST['nrp_nia']),
-            ':name'  => trim($_POST['name']),
-            ':rank'  => trim($_POST['rank']),
-            ':unit'  => trim($_POST['unit']),
-            ':loc'   => trim($_POST['location_name'] ?? ''),
-            ':phone' => trim($_POST['phone'] ?? ''),
-            ':status'=> $_POST['status'] ?? 'aktif',
-        ]);
+        $id = (int)$_POST['id'];
+        if ($uploadedPhoto) {
+            $stmt = $pdo->prepare("UPDATE members SET nrp_nia=:nrp, name=:name, `rank`=:rank, unit=:unit, location_name=:loc, phone=:phone, status=:status, photo_path=:photo WHERE id=:id");
+            $params = [
+                ':id'    => $id,
+                ':nrp'   => trim($_POST['nrp_nia']),
+                ':name'  => trim($_POST['name']),
+                ':rank'  => trim($_POST['rank']),
+                ':unit'  => trim($_POST['unit']),
+                ':loc'   => trim($_POST['location_name'] ?? ''),
+                ':phone' => trim($_POST['phone'] ?? ''),
+                ':status'=> $_POST['status'] ?? 'aktif',
+                ':photo' => $uploadedPhoto
+            ];
+        } else {
+            $stmt = $pdo->prepare("UPDATE members SET nrp_nia=:nrp, name=:name, `rank`=:rank, unit=:unit, location_name=:loc, phone=:phone, status=:status WHERE id=:id");
+            $params = [
+                ':id'    => $id,
+                ':nrp'   => trim($_POST['nrp_nia']),
+                ':name'  => trim($_POST['name']),
+                ':rank'  => trim($_POST['rank']),
+                ':unit'  => trim($_POST['unit']),
+                ':loc'   => trim($_POST['location_name'] ?? ''),
+                ':phone' => trim($_POST['phone'] ?? ''),
+                ':status'=> $_POST['status'] ?? 'aktif'
+            ];
+        }
+        $stmt->execute($params);
         setFlash('Data anggota berhasil diperbarui.', 'success');
         header('Location: dashboard.php');
         exit();
@@ -138,8 +171,18 @@ $members = $dataStmt->fetchAll();
                             <td class="ps-3 text-muted"><?= $m['id'] ?></td>
                             <td><span class="badge bg-light text-dark border"><?= htmlspecialchars($m['nrp_nia']) ?></span></td>
                             <td>
-                                <strong><?= htmlspecialchars($m['name']) ?></strong><br>
-                                <small class="text-muted"><i class="bi bi-telephone"></i> <?= htmlspecialchars($m['phone'] ?: '-') ?></small>
+                                <div class="d-flex align-items-center">
+                                    <?php 
+                                        $avatarImg = (!empty($m['photo_path']) && file_exists(__DIR__ . '/../' . $m['photo_path'])) 
+                                                     ? '../' . htmlspecialchars($m['photo_path']) 
+                                                     : "https://ui-avatars.com/api/?name=" . urlencode($m['name']) . "&size=40&background=1e3c72&color=fff";
+                                    ?>
+                                    <img src="<?= $avatarImg ?>" class="rounded-circle me-2 border shadow-sm" style="width: 38px; height: 38px; object-fit: cover;" alt="Avatar">
+                                    <div>
+                                        <strong><?= htmlspecialchars($m['name']) ?></strong><br>
+                                        <small class="text-muted"><i class="bi bi-telephone"></i> <?= htmlspecialchars($m['phone'] ?: '-') ?></small>
+                                    </div>
+                                </div>
                             </td>
                             <td><span class="badge bg-secondary"><?= htmlspecialchars($m['rank']) ?></span></td>
                             <td>
@@ -212,7 +255,7 @@ $members = $dataStmt->fetchAll();
 <div class="modal fade" id="memberModal" tabindex="-1" aria-labelledby="memberModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <form method="post" action="dashboard.php">
+      <form method="post" action="dashboard.php" enctype="multipart/form-data">
         <div class="modal-header">
           <h5 class="modal-title fw-bold" id="memberModalLabel">Tambah / Edit Anggota</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -262,13 +305,20 @@ $members = $dataStmt->fetchAll();
             </div>
           </div>
 
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Status Keanggotaan</label>
-            <select class="form-select" name="status" id="modalStatus">
-              <option value="aktif">Aktif</option>
-              <option value="non-aktif">Non-aktif</option>
-              <option value="pensiun">Pensiun</option>
-            </select>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-semibold">Status Keanggotaan</label>
+              <select class="form-select" name="status" id="modalStatus">
+                <option value="aktif">Aktif</option>
+                <option value="non-aktif">Non-aktif</option>
+                <option value="pensiun">Pensiun</option>
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-semibold">Foto Profil Anggota</label>
+              <input class="form-control" type="file" name="photo" accept="image/*">
+              <small class="text-muted">Maksimal 2MB (JPG, PNG, WEBP). Kosongkan jika tidak diubah.</small>
+            </div>
           </div>
         </div>
         <div class="modal-footer">

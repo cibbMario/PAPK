@@ -1,4 +1,4 @@
--- PAPK Member Management System Database Schema
+papk_db-- PAPK Member Management System Database Schema
 -- ------------------------------------------------------------
 -- This script creates all tables required for the PAPK website.
 -- Execute it with the MySQL user that has CREATE/DROP privileges.

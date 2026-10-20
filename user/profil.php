@@ -123,6 +123,43 @@ $avatarUrl = (!empty($displayPhoto) && file_exists(__DIR__ . '/../' . $displayPh
                 </table>
             </div>
         </div>
+
+        <?php
+        // Ambil riwayat kompetensi singkat perwira
+        $userMemberId = $user['member_id'] ?? null;
+        $userComps = [];
+        if ($userMemberId) {
+            $stmtC = $pdo->prepare("SELECT * FROM member_competencies WHERE member_id = :mid ORDER BY year DESC, id DESC LIMIT 5");
+            $stmtC->execute([':mid' => $userMemberId]);
+            $userComps = $stmtC->fetchAll();
+        }
+        ?>
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold"><i class="bi bi-award text-primary me-2"></i>Portofolio & Kompetensi Terverifikasi</h5>
+                <a href="kompetensi.php" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil-square me-1"></i> Kelola Portofolio</a>
+            </div>
+            <div class="card-body">
+                <?php if (count($userComps) > 0): ?>
+                    <div class="list-group list-group-flush">
+                        <?php foreach ($userComps as $uc): ?>
+                            <div class="list-group-item px-0 py-2 d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="badge bg-primary me-2 text-capitalize"><?= str_replace('_', ' ', $uc['category']) ?></span>
+                                    <strong><?= htmlspecialchars($uc['title']) ?></strong>
+                                    <div class="small text-muted"><?= htmlspecialchars($uc['institution'] ?: 'Lembaga Kedinasan') ?> (<?= htmlspecialchars($uc['year'] ?: '-') ?>)</div>
+                                </div>
+                                <?php if (!empty($uc['certificate_no'])): ?>
+                                    <span class="badge bg-light text-dark border"><code><?= htmlspecialchars($uc['certificate_no']) ?></code></span>
+                                <?php endif; ?>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php else: ?>
+                    <p class="text-muted small mb-0">Belum ada portofolio atau sertifikasi keahlian yang ditambahkan. Klik tombol <strong>Kelola Portofolio</strong> untuk melengkapi data Anda.</p>
+                <?php endif; ?>
+            </div>
+        </div>
     </div>
 </div>
 

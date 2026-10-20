@@ -37,7 +37,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':img'        => $imagePath,
                 ':created_by' => $adminId
             ]);
-            setFlash('Konten / Pengumuman berhasil diterbitkan!', 'success');
+
+            // Siarkan notifikasi jika dicentang
+            if (!empty($_POST['broadcast_wa'])) {
+                require_once __DIR__ . '/../includes/notifier.php';
+                $snippet = mb_strimwidth(strip_tags($content), 0, 150, "...");
+                $countRecipients = broadcastNotificationToAll($title, $snippet, $category);
+                setFlash("Konten / Pengumuman berhasil diterbitkan dan disiarkan ke $countRecipients personel!", 'success');
+            } else {
+                setFlash('Konten / Pengumuman berhasil diterbitkan!', 'success');
+            }
         } elseif ($action === 'edit') {
             $id = (int)$_POST['id'];
             if ($imagePath) {
@@ -172,6 +181,14 @@ $announcements = $stmt->fetchAll();
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Uraian / Isi Konten *</label>
                         <textarea class="form-control" name="content" id="modalContentInput" rows="6" placeholder="Ketik rincian pengumuman lengkap di sini..." required></textarea>
+                    </div>
+
+                    <div class="form-check form-switch p-3 bg-light rounded border mb-3">
+                        <input class="form-check-input ms-0 me-2" type="checkbox" name="broadcast_wa" id="broadcastWaCheck" value="1" checked>
+                        <label class="form-check-label fw-bold text-success" for="broadcastWaCheck">
+                            <i class="bi bi-whatsapp me-1"></i> Siarkan Notifikasi Otomatis via WhatsApp Gateway
+                        </label>
+                        <div class="small text-muted mt-1">Pesan ringkasan pengumuman akan otomatis dikirimkan ke nomor WA seluruh personel aktif.</div>
                     </div>
                 </div>
                 <div class="modal-footer">

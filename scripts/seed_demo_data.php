@@ -5,11 +5,11 @@ require_once __DIR__ . '/../config/koneksi.php';
 $check = $pdo->query("SELECT COUNT(*) FROM members")->fetchColumn();
 if ($check == 0) {
     $members = [
-        ['523451', 'Mayor Adm Agus Santoso, S.T.', 'Mayor', 'Disminpersau', 'aktif', '081234567890', 'Komplek Halim Perdanakusuma, Jakarta Timur'],
-        ['523452', 'Kapten Tek Budi Prasetyo, M.T.', 'Kapten', 'Koharmatau', 'aktif', '081234567891', 'Lanud Iswahjudi, Madiun'],
-        ['523453', 'Lettu Lek Citra Dewi, S.Kom.', 'Lettu', 'Disinfolahtau', 'aktif', '081234567892', 'Mabesau Cilangkap, Jakarta Timur'],
+        ['523451', 'Letda Adm Agus Santoso, S.T.', 'Letda', 'Disminpersau', 'aktif', '081234567890', 'Komplek Halim Perdanakusuma, Jakarta Timur'],
+        ['523452', 'Letda Tek Budi Prasetyo, M.T.', 'Letda', 'Koharmatau', 'aktif', '081234567891', 'Lanud Iswahjudi, Madiun'],
+        ['523453', 'Letda Lek Citra Dewi, S.Kom.', 'Letda', 'Disinfolahtau', 'aktif', '081234567892', 'Mabesau Cilangkap, Jakarta Timur'],
         ['523454', 'Letda Kes Dedi Irawan, S.Ked.', 'Letda', 'Diskesau', 'aktif', '081234567893', 'RSAU dr. Esnawan Antariksa'],
-        ['523455', 'Kolonel Sus Eko Nugroho, S.H.', 'Kolonel', 'Dispenau', 'aktif', '081234567894', 'Mabesau Cilangkap, Jakarta Timur']
+        ['523455', 'Letda Sus Eko Nugroho, S.H.', 'Letda', 'Dispenau', 'aktif', '081234567894', 'Mabesau Cilangkap, Jakarta Timur']
     ];
 
     $insStmt = $pdo->prepare("INSERT INTO members (nrp_nia, name, `rank`, unit, status, phone, address) VALUES (?, ?, ?, ?, ?, ?, ?)");

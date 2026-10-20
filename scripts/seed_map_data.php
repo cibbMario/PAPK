@@ -8,8 +8,8 @@ $pdo->exec("UPDATE users SET status = 'approved' WHERE username IN ('admin', 'jo
 $membersData = [
     [
         'nrp' => '523451',
-        'name' => 'Mayor Adm Agus Santoso, S.T.',
-        'rank' => 'Mayor',
+        'name' => 'Letda Sus Yanuar Mario Wiecaksono, S, Tr, Han.',
+        'rank' => 'Letda',
         'unit' => 'Disminpersau - Mabesau',
         'loc' => 'Mabesau Cilangkap, Jakarta',
         'lat' => -6.326884,
@@ -19,8 +19,8 @@ $membersData = [
     ],
     [
         'nrp' => '523452',
-        'name' => 'Kapten Tek Budi Prasetyo, M.T.',
-        'rank' => 'Kapten',
+        'name' => 'Letda Tek Budi Prasetyo, M.T.',
+        'rank' => 'Letda',
         'unit' => 'Depohar 20 Koharmatau',
         'loc' => 'Lanud Iswahjudi, Madiun',
         'lat' => -7.616616,
@@ -30,8 +30,8 @@ $membersData = [
     ],
     [
         'nrp' => '523453',
-        'name' => 'Lettu Lek Citra Dewi, S.Kom.',
-        'rank' => 'Lettu',
+        'name' => 'Letda Lek Citra Dewi, S.Kom.',
+        'rank' => 'Letda',
         'unit' => 'Skadron Udara 5',
         'loc' => 'Lanud Sultan Hasanuddin, Makassar',
         'lat' => -5.061633,
@@ -52,8 +52,8 @@ $membersData = [
     ],
     [
         'nrp' => '523455',
-        'name' => 'Kolonel Sus Eko Nugroho, S.H.',
-        'rank' => 'Kolonel',
+        'name' => 'Letda Sus Eko Nugroho, S.H.',
+        'rank' => 'Letda',
         'unit' => 'Lanud Roesmin Nurjadin',
         'loc' => 'Lanud Roesmin Nurjadin, Pekanbaru',
         'lat' => 0.461129,
@@ -63,8 +63,8 @@ $membersData = [
     ],
     [
         'nrp' => '523456',
-        'name' => 'Kapten Kal Fajar Hidayat, S.E.',
-        'rank' => 'Kapten',
+        'name' => 'Letda Kal Fajar Hidayat, S.E.',
+        'rank' => 'Letda',
         'unit' => 'Dinas Logistik',
         'loc' => 'Lanud Supadio, Pontianak',
         'lat' => -0.150914,
@@ -74,8 +74,8 @@ $membersData = [
     ],
     [
         'nrp' => '523457',
-        'name' => 'Lettu Adm Giska Putri, S.A.P.',
-        'rank' => 'Lettu',
+        'name' => 'Letda Adm Giska Putri, S.A.P.',
+        'rank' => 'Letda',
         'unit' => 'Lanud Silas Papare',
         'loc' => 'Lanud Silas Papare, Jayapura',
         'lat' => -2.576856,
@@ -85,8 +85,8 @@ $membersData = [
     ],
     [
         'nrp' => '523458',
-        'name' => 'Kapten Lek Hendra Kurnia, S.T.',
-        'rank' => 'Kapten',
+        'name' => 'Letda Lek Hendra Kurnia, S.T.',
+        'rank' => 'Letda',
         'unit' => 'Satrad 243 Timika',
         'loc' => 'Satrad 243, Mimika Papua',
         'lat' => -4.528438,
@@ -96,8 +96,8 @@ $membersData = [
     ],
     [
         'nrp' => '523459',
-        'name' => 'Mayor Sus Ilham Maulana, S.Ag.',
-        'rank' => 'Mayor',
+        'name' => 'Letda Sus Ilham Maulana, S.Ag.',
+        'rank' => 'Letda',
         'unit' => 'Lanud Sam Ratulangi',
         'loc' => 'Lanud Sam Ratulangi, Manado',
         'lat' => 1.549298,

@@ -14,6 +14,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $req = $stmtReq->fetch();
 
     if ($req) {
+        require_once __DIR__ . '/../includes/notifier.php';
+        $fieldNames = [
+            'phone'   => 'Nomor HP / WhatsApp',
+            'address' => 'Alamat Domisili',
+            'name'    => 'Nama Lengkap & Gelar'
+        ];
+        $fieldLabel = $fieldNames[$req['field']] ?? $req['field'];
+
         if ($action === 'approve') {
             // 1. Update status di change_requests
             $updReq = $pdo->prepare("UPDATE change_requests SET status = 'approved', admin_note = :note WHERE id = :id");
@@ -27,12 +35,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $updMember->execute([':val' => $req['new_value'], ':mid' => $req['member_id']]);
             }
 
-            setFlash('Pengajuan berhasil DISETUJUI dan data anggota telah otomatis diperbarui!', 'success');
+            // 3. Kirim notifikasi WhatsApp & In-App ke pemohon
+            sendNotificationToUser(
+                $req['requested_by'],
+                'Pengajuan Data Disetujui',
+                "Pengajuan pembaruan data ($fieldLabel) Anda telah DISETUJUI oleh Administrator.\nCatatan: " . ($adminNote ?: 'Disetujui oleh Administrator'),
+                'approval'
+            );
+
+            setFlash('Pengajuan berhasil DISETUJUI, data diperbarui, dan notifikasi telah dikirim ke pemohon!', 'success');
         } elseif ($action === 'reject') {
             $updReq = $pdo->prepare("UPDATE change_requests SET status = 'rejected', admin_note = :note WHERE id = :id");
             $updReq->execute([':note' => $adminNote ?: 'Pengajuan ditolak', ':id' => $requestId]);
 
-            setFlash('Pengajuan berhasil DITOLAK.', 'danger');
+            // Kirim notifikasi penolakan
+            sendNotificationToUser(
+                $req['requested_by'],
+                'Pengajuan Data Ditolak',
+                "Mohon maaf, pengajuan pembaruan data ($fieldLabel) Anda DITOLAK oleh Administrator.\nAlasan: " . ($adminNote ?: 'Dokumen/data tidak sesuai persyaratan.'),
+                'rejection'
+            );
+
+            setFlash('Pengajuan DITOLAK dan notifikasi telah dikirim ke pemohon.', 'danger');
         }
     }
     header('Location: pengajuan.php');

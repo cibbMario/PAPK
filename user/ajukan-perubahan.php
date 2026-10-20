@@ -61,20 +61,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Form Pengajuan Perubahan Data</h1>
-    <a href="riwayat-pengajuan.php" class="btn btn-outline-secondary btn-sm">Lihat Riwayat Pengajuan</a>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4 border-bottom">
+    <h1 class="h2 font-serif">Form Pengajuan Perubahan Data</h1>
+    <a href="riwayat-pengajuan.php" class="btn btn-outline-dark btn-sm">Lihat Riwayat Pengajuan</a>
 </div>
 
 <div class="row">
     <div class="col-lg-7">
-        <div class="card shadow-sm border-0 mb-4">
-            <div class="card-header bg-white py-3">
-                <h5 class="mb-0 fw-bold">Ajukan Koreksi / Pembaruan Data</h5>
+        <div class="card border mb-4" style="border-radius: 12px;">
+            <div class="card-header bg-white py-3 border-bottom">
+                <h5 class="mb-0 fw-bold font-serif">Ajukan Koreksi / Pembaruan Data</h5>
             </div>
             <div class="card-body p-4">
                 <?php if (!$memberId): ?>
-                    <div class="alert alert-warning border-0">
+                    <div class="alert alert-warning">
                         Akun Anda belum ditautkan ke data anggota oleh Administrator. Silakan hubungi admin.
                     </div>
                 <?php else: ?>
@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
 
                         <div class="d-grid mt-4">
-                            <button type="submit" class="btn btn-primary fw-semibold">Kirim Pengajuan Perubahan</button>
+                            <button type="submit" class="btn btn-dark fw-semibold py-2">Kirim Pengajuan Perubahan</button>
                         </div>
                     </form>
                 <?php endif; ?>
@@ -110,9 +110,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <div class="col-lg-5">
-        <div class="card shadow-sm border-0 bg-light">
+        <div class="card border bg-light" style="border-radius: 12px;">
             <div class="card-body p-4">
-                <h6 class="fw-bold mb-3 text-primary"><i class="bi bi-info-circle"></i> Alur Verifikasi Data</h6>
+                <h6 class="fw-bold mb-3 text-dark font-serif">Alur Verifikasi Data</h6>
                 <ol class="small text-muted ps-3 mb-0" style="line-height: 1.8;">
                     <li>Anggota mengisi formulir perubahan data yang ingin diperbarui.</li>
                     <li>Status pengajuan akan berstatus <strong>Pending</strong>.</li>

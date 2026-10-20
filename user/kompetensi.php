@@ -88,52 +88,43 @@ $stmtComp->execute([':mid' => $memberId]);
 $competencies = $stmtComp->fetchAll();
 
 $catMeta = [
-    'profesi' => ['label' => 'Profesi & Keilmuan', 'badge' => 'bg-primary', 'icon' => 'bi-briefcase-fill'],
-    'pendidikan_militer' => ['label' => 'Pendidikan Militer', 'badge' => 'bg-success', 'icon' => 'bi-shield-check'],
-    'sertifikasi' => ['label' => 'Sertifikasi Nasional/Intl', 'badge' => 'bg-purple', 'icon' => 'bi-award-fill'],
-    'bahasa' => ['label' => 'Kemampuan Bahasa Asing', 'badge' => 'bg-warning text-dark', 'icon' => 'bi-translate'],
-    'keahlian_khusus' => ['label' => 'Keahlian Khusus / Brevet', 'badge' => 'bg-danger', 'icon' => 'bi-star-fill'],
+    'profesi' => ['label' => 'Profesi & Keilmuan', 'badge' => 'bg-dark text-white'],
+    'pendidikan_militer' => ['label' => 'Pendidikan Militer', 'badge' => 'bg-dark text-white'],
+    'sertifikasi' => ['label' => 'Sertifikasi Nasional/Intl', 'badge' => 'bg-light text-dark border'],
+    'bahasa' => ['label' => 'Kemampuan Bahasa Asing', 'badge' => 'bg-light text-dark border'],
+    'keahlian_khusus' => ['label' => 'Keahlian Khusus / Brevet', 'badge' => 'bg-dark text-white'],
 ];
 ?>
 
-<style>
-.bg-purple { background-color: #6f42c1 !important; color: white !important; }
-</style>
-
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4 border-bottom">
     <div>
-        <h1 class="h2 mb-1"><i class="bi bi-mortarboard-fill text-primary me-2"></i>Portofolio & Kompetensi Personel</h1>
+        <h1 class="h2 mb-1 font-serif">Portofolio & Kompetensi Personel</h1>
         <p class="text-muted small mb-0">Kelola riwayat sertifikasi profesi, pendidikan militer, dan keahlian khusus Anda.</p>
     </div>
     <div class="btn-toolbar mb-2 mb-md-0">
-        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#compModal" onclick="prepareAdd()">
-            <i class="bi bi-plus-circle me-1"></i> Tambah Kompetensi Baru
+        <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#compModal" onclick="prepareAdd()">
+            Tambah Portofolio Baru
         </button>
     </div>
 </div>
 
 <!-- Header Ringkasan Profil Perwira -->
-<div class="card shadow-sm border-0 mb-4 bg-light">
+<div class="card border mb-4 bg-white" style="border-radius: 12px;">
     <div class="card-body p-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
-        <div class="d-flex align-items-center">
-            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px; font-size: 20px;">
-                <i class="bi bi-award"></i>
-            </div>
-            <div>
-                <h6 class="mb-0 fw-bold"><?= htmlspecialchars($userData['name']) ?></h6>
-                <small class="text-muted">Pangkat: <?= htmlspecialchars($userData['rank']) ?> | NRP: <?= htmlspecialchars($userData['nrp_nia']) ?> | Satuan: <?= htmlspecialchars($userData['unit']) ?></small>
-            </div>
+        <div>
+            <h6 class="mb-1 fw-bold font-serif fs-5"><?= htmlspecialchars($userData['name']) ?></h6>
+            <small class="text-muted">Pangkat: <?= htmlspecialchars($userData['rank']) ?> | NRP: <?= htmlspecialchars($userData['nrp_nia']) ?> | Satuan: <?= htmlspecialchars($userData['unit']) ?></small>
         </div>
         <div>
-            <span class="badge bg-primary fs-6 px-3 py-2"><?= count($competencies) ?> Portofolio Tercatat</span>
+            <span class="badge bg-dark text-white fs-6 px-3 py-2"><?= count($competencies) ?> Portofolio Tercatat</span>
         </div>
     </div>
 </div>
 
 <!-- Daftar Kompetensi -->
-<div class="card shadow-sm border-0 mb-4">
+<div class="card border mb-4" style="border-radius: 12px; overflow: hidden;">
     <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
-        <h5 class="mb-0 fw-bold">Daftar Sertifikasi & Keahlian Khusus</h5>
+        <h5 class="mb-0 fw-bold font-serif">Daftar Sertifikasi & Keahlian Khusus</h5>
     </div>
     <div class="card-body p-0">
         <div class="table-responsive">
@@ -146,19 +137,19 @@ $catMeta = [
                         <th>Lembaga Penyelenggara</th>
                         <th class="text-center" style="width: 80px;">Tahun</th>
                         <th>No. Sertifikat</th>
-                        <th style="width: 130px;" class="text-center">Aksi</th>
+                        <th style="width: 140px;" class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (count($competencies) > 0): ?>
                         <?php foreach ($competencies as $i => $c): 
-                            $meta = $catMeta[$c['category']] ?? ['label' => 'Lainnya', 'badge' => 'bg-secondary', 'icon' => 'bi-tag'];
+                            $meta = $catMeta[$c['category']] ?? ['label' => 'Lainnya', 'badge' => 'bg-light text-dark border'];
                         ?>
                             <tr>
                                 <td class="text-center text-muted"><?= $i + 1 ?></td>
                                 <td>
                                     <span class="badge <?= $meta['badge'] ?>">
-                                        <i class="bi <?= $meta['icon'] ?> me-1"></i> <?= $meta['label'] ?>
+                                        <?= $meta['label'] ?>
                                     </span>
                                 </td>
                                 <td>
@@ -171,15 +162,15 @@ $catMeta = [
                                 <td class="text-center"><?= htmlspecialchars($c['year'] ?: '-') ?></td>
                                 <td><code><?= htmlspecialchars($c['certificate_no'] ?: '-') ?></code></td>
                                 <td class="text-center">
-                                    <button class="btn btn-sm btn-outline-warning me-1" 
+                                    <button class="btn btn-sm btn-outline-dark me-1" 
                                             onclick="prepareEdit(<?= htmlspecialchars(json_encode($c)) ?>)"
                                             data-bs-toggle="modal" data-bs-target="#compModal" title="Edit">
-                                        <i class="bi bi-pencil"></i>
+                                        Edit
                                     </button>
                                     <a href="kompetensi.php?action=delete&id=<?= $c['id'] ?>" 
                                        onclick="return confirm('Hapus kompetensi ini dari portofolio Anda?');" 
-                                       class="btn btn-sm btn-outline-danger" title="Hapus">
-                                        <i class="bi bi-trash"></i>
+                                       class="btn btn-sm btn-outline-dark" title="Hapus">
+                                        Hapus
                                     </a>
                                 </td>
                             </tr>
@@ -187,10 +178,9 @@ $catMeta = [
                     <?php else: ?>
                         <tr>
                             <td colspan="7" class="text-center py-5 text-muted">
-                                <i class="bi bi-inbox fs-1 d-block mb-2 text-muted opacity-50"></i>
                                 Belum ada data kompetensi atau sertifikasi yang ditambahkan.<br>
-                                <button type="button" class="btn btn-primary btn-sm mt-3" data-bs-toggle="modal" data-bs-target="#compModal" onclick="prepareAdd()">
-                                    <i class="bi bi-plus-circle me-1"></i> Tambah Sekarang
+                                <button type="button" class="btn btn-dark btn-sm mt-3" data-bs-toggle="modal" data-bs-target="#compModal" onclick="prepareAdd()">
+                                    Tambah Sekarang
                                 </button>
                             </td>
                         </tr>

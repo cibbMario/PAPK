@@ -23,31 +23,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
 
     if (empty($username) || empty($password)) {
-        $error = 'Username dan password wajib diisi!';
+        $error = 'Username dan kata sandi wajib diisi.';
     } else {
-        // Cari user di database
         $stmt = $pdo->prepare("SELECT * FROM users WHERE username = :username LIMIT 1");
         $stmt->execute([':username' => $username]);
         $user = $stmt->fetch();
 
         if ($user) {
-            // Cek status verifikasi akun oleh admin
             if (isset($user['status']) && $user['status'] === 'pending') {
-                $error = 'Akun Anda sedang dalam antrean verifikasi oleh Administrator. Mohon menunggu persetujuan!';
+                $error = 'Akun Anda sedang dalam antrean verifikasi oleh Administrator. Mohon menunggu persetujuan.';
             } elseif (isset($user['status']) && $user['status'] === 'rejected') {
-                $error = 'Permohonan pendaftaran akun Anda ditolak oleh Administrator. Silakan hubungi admin!';
+                $error = 'Permohonan pendaftaran akun Anda ditolak oleh Administrator.';
             } elseif (!empty($user['locked_until']) && strtotime($user['locked_until']) > time()) {
-                // Cek apakah akun sedang terkunci (brute force protection)
                 $wait = ceil((strtotime($user['locked_until']) - time()) / 60);
-                $error = "Akun terkunci sementara karena 5x gagal login. Coba lagi dalam $wait menit.";
+                $error = "Akun terkunci sementara karena 5 kali gagal masuk. Coba lagi dalam $wait menit.";
             } else {
-                // Verifikasi password
                 if (password_verify($password, $user['password_hash'])) {
-                    // Reset failed_attempts jika sukses
                     $resetStmt = $pdo->prepare("UPDATE users SET failed_attempts = 0, locked_until = NULL WHERE id = :id");
                     $resetStmt->execute([':id' => $user['id']]);
 
-                    // Set session
                     $_SESSION['user_id'] = $user['id'];
                     $_SESSION['username'] = $user['username'];
                     $_SESSION['role'] = $user['role'];
@@ -59,7 +53,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                     exit;
                 } else {
-                    // Password salah -> tambah failed_attempts
                     $attempts = (int)$user['failed_attempts'] + 1;
                     $lockUntil = null;
                     if ($attempts >= 5) {
@@ -69,15 +62,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $updStmt->execute([':att' => $attempts, ':lock' => $lockUntil, ':id' => $user['id']]);
 
                     if ($attempts >= 5) {
-                        $error = 'Password salah 5 kali! Akun terkunci selama 15 menit.';
+                        $error = 'Kata sandi salah 5 kali. Akun terkunci selama 15 menit.';
                     } else {
                         $remaining = 5 - $attempts;
-                        $error = "Username atau password salah! Sisa percobaan: $remaining kali.";
+                        $error = "Username atau kata sandi tidak cocok. Sisa percobaan: $remaining kali.";
                     }
                 }
             }
         } else {
-            $error = 'Username atau password tidak ditemukan!';
+            $error = 'Username atau kata sandi tidak ditemukan.';
         }
     }
 }
@@ -87,86 +80,157 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - PAPK TNI AU</title>
+    <title>Masuk — PAPK TNI AU</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts: Editorial Serif (Playfair Display) + Geometric Sans (Plus Jakarta Sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
+        :root {
+            --font-serif: 'Playfair Display', Georgia, serif;
+            --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --color-dark: #0f172a;
+            --color-border: #e2e8f0;
+        }
+
         body {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            background-color: #f8fafc;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: var(--font-sans);
+            color: var(--color-dark);
+            padding: 24px;
         }
-        .login-card {
+
+        .auth-card {
             width: 100%;
-            max-width: 420px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            border: none;
+            max-width: 400px;
+            background: #ffffff;
+            border: 1px solid var(--color-border);
+            border-radius: 14px;
+            padding: 36px 32px;
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
         }
-        .card-header {
-            background-color: transparent;
-            border-bottom: none;
-            text-align: center;
-            padding-top: 2rem;
-        }
-        .brand-title {
-            font-weight: 700;
-            color: #1e3c72;
-            letter-spacing: 1px;
-        }
-        .btn-primary {
-            background-color: #1e3c72;
-            border-color: #1e3c72;
-            padding: 10px;
+
+        .brand-heading {
+            font-family: var(--font-serif);
+            font-size: 1.85rem;
             font-weight: 600;
+            letter-spacing: -0.3px;
+            color: var(--color-dark);
+            margin-bottom: 6px;
+            text-align: center;
         }
-        .btn-primary:hover {
-            background-color: #15294f;
-            border-color: #15294f;
+
+        .brand-subtitle {
+            font-size: 0.88rem;
+            color: #64748b;
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .form-label-clean {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 6px;
+        }
+
+        .form-input-clean {
+            font-family: var(--font-sans);
+            font-size: 0.92rem;
+            padding: 10px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            transition: border-color 0.15s ease;
+            width: 100%;
+        }
+
+        .form-input-clean:focus {
+            border-color: #0f172a;
+            outline: none;
+            box-shadow: none;
+        }
+
+        .btn-auth {
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            font-weight: 600;
+            background-color: #0f172a;
+            border: 1px solid #0f172a;
+            color: #ffffff;
+            padding: 11px;
+            border-radius: 8px;
+            width: 100%;
+            transition: background 0.15s ease;
+        }
+
+        .btn-auth:hover {
+            background-color: #334155;
+            border-color: #334155;
+            color: #ffffff;
+        }
+
+        .auth-footer {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #f1f5f9;
+            text-align: center;
+            font-size: 0.82rem;
+            color: #64748b;
+        }
+
+        .auth-link {
+            color: #0f172a;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .auth-link:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
 
-<div class="container p-3">
-    <div class="card login-card mx-auto bg-white">
-        <div class="card-header">
-            <h3 class="brand-title mb-1">PAPK TNI AU</h3>
-            <p class="text-muted small">Sistem Informasi Manajemen Data Anggota</p>
-        </div>
-        <div class="card-body px-4 pb-4">
-            <?php if (!empty($error)): ?>
-                <div class="alert alert-danger py-2 small" role="alert">
-                    <?= htmlspecialchars($error) ?>
-                </div>
-            <?php endif; ?>
+<div class="auth-card">
+    <div class="brand-heading">PAPK TNI AU</div>
+    <div class="brand-subtitle">Portal Informasi Perwira Karier</div>
 
-            <form method="POST" action="login.php">
-                <div class="mb-3">
-                    <label for="username" class="form-label small fw-semibold">Username</label>
-                    <input type="text" class="form-control" id="username" name="username" placeholder="Masukkan username" required autofocus>
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label small fw-semibold">Password</label>
-                    <input type="password" class="form-control" id="password" name="password" placeholder="Masukkan password" required>
-                </div>
-                <div class="d-grid mt-4">
-                    <button type="submit" class="btn btn-primary">Masuk ke Sistem</button>
-                </div>
-            </form>
-            <div class="text-center mt-3 pt-2 border-top">
-                <span class="small text-muted">Belum memiliki akun perwira?</span><br>
-                <a href="register.php" class="text-primary fw-semibold small text-decoration-none">Daftar Akun Baru (Verifikasi Admin)</a>
-            </div>
-            <div class="text-center mt-2">
-                <small class="text-muted" style="font-size: 11px;">Akun demo: <strong>admin</strong> (admin123) | <strong>johndoe</strong> (user123)</small>
-            </div>
+    <?php if (!empty($error)): ?>
+        <div class="alert py-2 px-3 small mb-3 text-dark bg-white border border-dark" style="border-radius: 8px;" role="alert">
+            <?= htmlspecialchars($error) ?>
+        </div>
+    <?php endif; ?>
+
+    <form method="POST" action="login.php">
+        <div class="mb-3">
+            <label for="username" class="form-label-clean">Username</label>
+            <input type="text" class="form-input-clean" id="username" name="username" placeholder="Masukkan username" required autofocus>
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label-clean">Kata Sandi</label>
+            <input type="password" class="form-input-clean" id="password" name="password" placeholder="Masukkan kata sandi" required>
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn-auth">Masuk ke Sistem</button>
+        </div>
+    </form>
+
+    <div class="auth-footer">
+        <div>Belum memiliki akun? <a href="register.php" class="auth-link">Daftar Akun Baru</a></div>
+        <div class="mt-2 text-muted" style="font-size: 11px;">
+            Akun uji coba: <strong>admin</strong> (admin123) atau <strong>johndoe</strong> (user123)
         </div>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

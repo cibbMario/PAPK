@@ -5,49 +5,67 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 require_once __DIR__ . '/config/koneksi.php';
 
+// Jika sudah login, redirect
+if (!empty($_SESSION['user_id'])) {
+    if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
+        header('Location: admin/dashboard.php');
+        exit;
+    } else {
+        header('Location: user/dashboard.php');
+        exit;
+    }
+}
+
 $error = '';
 $success = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fullName = trim($_POST['full_name'] ?? '');
-    $nrp      = trim($_POST['reg_nrp'] ?? '');
     $username = trim($_POST['username'] ?? '');
     $email    = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
-    $confirm  = $_POST['confirm_password'] ?? '';
+    $passConf = $_POST['password_confirm'] ?? '';
+    $regNrp   = trim($_POST['reg_nrp'] ?? '');
 
-    if (empty($fullName) || empty($nrp) || empty($username) || empty($password)) {
-        $error = 'Semua kolom bertanda bintang (*) wajib diisi!';
-    } elseif ($password !== $confirm) {
-        $error = 'Konfirmasi password tidak cocok!';
+    if (empty($fullName) || empty($username) || empty($password) || empty($regNrp)) {
+        $error = 'Nama lengkap, NRP, username, dan kata sandi wajib diisi.';
+    } elseif ($password !== $passConf) {
+        $error = 'Konfirmasi kata sandi tidak cocok.';
     } elseif (strlen($password) < 6) {
-        $error = 'Password minimal 6 karakter demi keamanan akun!';
+        $error = 'Kata sandi minimal harus 6 karakter.';
     } else {
-        // Cek apakah username atau email sudah ada
-        $check = $pdo->prepare("SELECT id FROM users WHERE username = :uname OR email = :email LIMIT 1");
-        $check->execute([':uname' => $username, ':email' => $email]);
-        if ($check->fetch()) {
-            $error = 'Username atau Email sudah pernah didaftarkan. Gunakan yang lain!';
+        $stmtChk = $pdo->prepare("SELECT id FROM users WHERE username = :u LIMIT 1");
+        $stmtChk->execute([':u' => $username]);
+        if ($stmtChk->fetch()) {
+            $error = 'Username sudah digunakan. Silakan pilih username lain.';
         } else {
-            // Cek apakah ada anggota di tabel members yang cocok dengan NRP ini untuk otomatis ditautkan nanti
-            $stmtMember = $pdo->prepare("SELECT id FROM members WHERE nrp_nia = :nrp LIMIT 1");
-            $stmtMember->execute([':nrp' => $nrp]);
-            $foundMemberId = $stmtMember->fetchColumn() ?: null;
+            $stmtM = $pdo->prepare("SELECT id FROM members WHERE nrp_nia = :nrp LIMIT 1");
+            $stmtM->execute([':nrp' => $regNrp]);
+            $member = $stmtM->fetch();
 
-            // Simpan akun dengan status 'pending' (perlu verifikasi admin)
+            $memberId = null;
+            if ($member) {
+                $memberId = $member['id'];
+            } else {
+                $insM = $pdo->prepare("INSERT INTO members (nrp_nia, name, `rank`, korps, unit, status) VALUES (:nrp, :name, 'Letda', 'Sus', 'TNI AU', 'aktif')");
+                $insM->execute([
+                    ':nrp'  => $regNrp,
+                    ':name' => $fullName
+                ]);
+                $memberId = $pdo->lastInsertId();
+            }
+
             $passwordHash = password_hash($password, PASSWORD_BCRYPT);
-            $ins = $pdo->prepare("INSERT INTO users (username, full_name, reg_nrp, email, password_hash, role, status, member_id) 
-                                  VALUES (:uname, :fname, :nrp, :email, :pass, 'user', 'pending', :mid)");
-            $ins->execute([
-                ':uname' => $username,
-                ':fname' => $fullName,
-                ':nrp'   => $nrp,
+            $stmtIns = $pdo->prepare("INSERT INTO users (username, password_hash, role, email, status, member_id) 
+                                      VALUES (:u, :p, 'user', :email, 'pending', :mid)");
+            $stmtIns->execute([
+                ':u'     => $username,
+                ':p'     => $passwordHash,
                 ':email' => $email ?: null,
-                ':pass'  => $passwordHash,
-                ':mid'   => $foundMemberId
+                ':mid'   => $memberId
             ]);
 
-            $success = 'Pendaftaran akun Anda BERHASIL diajukan! Demi keamanan, akun berstatus <strong>Pending</strong> dan akan diverifikasi oleh Administrator sebelum Anda dapat login.';
+            $success = 'Pendaftaran berhasil diajukan. Akun Anda sedang menunggu verifikasi oleh Administrator sebelum dapat digunakan.';
         }
     }
 }
@@ -57,113 +75,183 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrasi Akun Anggota - PAPK TNI AU</title>
+    <title>Pendaftaran Personel — PAPK TNI AU</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts: Editorial Serif + Geometric Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
+        :root {
+            --font-serif: 'Playfair Display', Georgia, serif;
+            --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --color-dark: #0f172a;
+            --color-border: #e2e8f0;
+        }
+
         body {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            background-color: #f8fafc;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding: 20px 0;
+            font-family: var(--font-sans);
+            color: var(--color-dark);
+            padding: 32px 20px;
         }
-        .register-card {
+
+        .auth-card {
             width: 100%;
-            max-width: 520px;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            border: none;
+            max-width: 480px;
+            background: #ffffff;
+            border: 1px solid var(--color-border);
+            border-radius: 14px;
+            padding: 36px 32px;
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
         }
-        .brand-title {
-            font-weight: 700;
-            color: #1e3c72;
-        }
-        .btn-primary {
-            background-color: #1e3c72;
-            border-color: #1e3c72;
-            padding: 10px;
+
+        .brand-heading {
+            font-family: var(--font-serif);
+            font-size: 1.85rem;
             font-weight: 600;
+            letter-spacing: -0.3px;
+            color: var(--color-dark);
+            margin-bottom: 6px;
+            text-align: center;
         }
-        .btn-primary:hover {
-            background-color: #15294f;
+
+        .brand-subtitle {
+            font-size: 0.88rem;
+            color: #64748b;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .form-label-clean {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 6px;
+        }
+
+        .form-input-clean {
+            font-family: var(--font-sans);
+            font-size: 0.92rem;
+            padding: 10px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            transition: border-color 0.15s ease;
+            width: 100%;
+        }
+
+        .form-input-clean:focus {
+            border-color: #0f172a;
+            outline: none;
+            box-shadow: none;
+        }
+
+        .btn-auth {
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            font-weight: 600;
+            background-color: #0f172a;
+            border: 1px solid #0f172a;
+            color: #ffffff;
+            padding: 11px;
+            border-radius: 8px;
+            width: 100%;
+            transition: background 0.15s ease;
+        }
+
+        .btn-auth:hover {
+            background-color: #334155;
+            border-color: #334155;
+            color: #ffffff;
+        }
+
+        .auth-footer {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #f1f5f9;
+            text-align: center;
+            font-size: 0.82rem;
+            color: #64748b;
+        }
+
+        .auth-link {
+            color: #0f172a;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .auth-link:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
 
-<div class="container p-3">
-    <div class="card register-card mx-auto bg-white">
-        <div class="card-header bg-transparent text-center border-0 pt-4 pb-0">
-            <h3 class="brand-title mb-1">Pendaftaran Personel PAPK</h3>
-            <p class="text-muted small">Portal Sistem Data Anggota Perwira Prajurit Karier TNI AU</p>
+<div class="auth-card">
+    <div class="brand-heading">Pendaftaran Personel</div>
+    <div class="brand-subtitle">Portal Data Perwira Prajurit Karier TNI AU</div>
+
+    <?php if (!empty($error)): ?>
+        <div class="alert py-2 px-3 small mb-3 text-dark bg-white border border-dark" style="border-radius: 8px;" role="alert">
+            <?= htmlspecialchars($error) ?>
         </div>
-        <div class="card-body px-4 pb-4">
-            <?php if (!empty($error)): ?>
-                <div class="alert alert-danger py-2 small" role="alert">
-                    <?= htmlspecialchars($error) ?>
-                </div>
-            <?php endif; ?>
+    <?php endif; ?>
 
-            <?php if (!empty($success)): ?>
-                <div class="alert alert-success py-3 small" role="alert">
-                    <?= $success ?>
-                    <div class="mt-3 text-center">
-                        <a href="login.php" class="btn btn-sm btn-outline-success fw-semibold">Kembali ke Halaman Login</a>
-                    </div>
-                </div>
-            <?php else: ?>
-                <div class="alert alert-info border-0 py-2 small mb-3">
-                    <i class="bi bi-shield-lock"></i> <strong>Keamanan Terjaga:</strong> Seluruh permohonan akun baru harus melalui proses validasi NRP dan persetujuan Administrator.
-                </div>
-
-                <form method="POST" action="register.php">
-                    <div class="mb-3">
-                        <label class="form-label small fw-semibold">Nama Lengkap & Gelar *</label>
-                        <input type="text" class="form-control" name="full_name" placeholder="Contoh: Lettu Lek Rizky Pratama, S.T." required>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label small fw-semibold">NRP / NIA Perwira *</label>
-                            <input type="text" class="form-control" name="reg_nrp" placeholder="Contoh: 523881" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label small fw-semibold">Email Militer / Pribadi</label>
-                            <input type="email" class="form-control" name="email" placeholder="nama@tni-au.mil.id">
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label small fw-semibold">Pilih Username *</label>
-                        <input type="text" class="form-control" name="username" placeholder="Buat username untuk login" required>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label small fw-semibold">Password *</label>
-                            <input type="password" class="form-control" name="password" placeholder="Minimal 6 karakter" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label small fw-semibold">Ulangi Password *</label>
-                            <input type="password" class="form-control" name="confirm_password" placeholder="Konfirmasi password" required>
-                        </div>
-                    </div>
-
-                    <div class="d-grid mt-3">
-                        <button type="submit" class="btn btn-primary">Ajukan Akun Baru</button>
-                    </div>
-                </form>
-
-                <div class="text-center mt-3 small">
-                    Sudah memiliki akun? <a href="login.php" class="text-decoration-none fw-semibold">Masuk di sini</a>
-                </div>
-            <?php endif; ?>
+    <?php if (!empty($success)): ?>
+        <div class="alert py-3 px-3 small mb-3 text-dark bg-light border" style="border-radius: 8px;" role="alert">
+            <?= htmlspecialchars($success) ?>
+            <div class="mt-3 text-center">
+                <a href="login.php" class="auth-link">Kembali ke Halaman Masuk</a>
+            </div>
         </div>
-    </div>
+    <?php else: ?>
+        <form method="POST" action="register.php">
+            <div class="mb-3">
+                <label class="form-label-clean">Nama Lengkap & Gelar *</label>
+                <input type="text" class="form-input-clean" name="full_name" placeholder="Contoh: Letda Sus Arniza, S.H." required>
+            </div>
+
+            <div class="row g-2 mb-3">
+                <div class="col-md-6">
+                    <label class="form-label-clean">NRP / NIA *</label>
+                    <input type="text" class="form-input-clean" name="reg_nrp" placeholder="Contoh: 523455" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label-clean">Email</label>
+                    <input type="email" class="form-input-clean" name="email" placeholder="nama@email.com">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label-clean">Username *</label>
+                <input type="text" class="form-input-clean" name="username" placeholder="Pilih username unik" required>
+            </div>
+
+            <div class="row g-2 mb-4">
+                <div class="col-md-6">
+                    <label class="form-label-clean">Kata Sandi *</label>
+                    <input type="password" class="form-input-clean" name="password" placeholder="Minimal 6 karakter" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label-clean">Konfirmasi Kata Sandi *</label>
+                    <input type="password" class="form-input-clean" name="password_confirm" placeholder="Ulangi kata sandi" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-auth">Ajukan Pendaftaran</button>
+        </form>
+
+        <div class="auth-footer">
+            Sudah memiliki akun? <a href="login.php" class="auth-link">Masuk ke Sistem</a>
+        </div>
+    <?php endif; ?>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

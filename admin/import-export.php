@@ -120,8 +120,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file_excel'])) {
 ?>
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Import & Export Data Anggota</h1>
-    <a href="anggota.php" class="btn btn-outline-secondary btn-sm">Lihat Data Anggota</a>
+    <div>
+        <h1 class="h2 font-serif fw-bold mb-1">Import & Export Data Anggota</h1>
+        <p class="text-muted small mb-0">Pengelolaan berkas data anggota massal via CSV spreadsheet.</p>
+    </div>
+    <a href="dashboard.php" class="btn btn-outline-secondary btn-sm">Lihat Data Anggota</a>
 </div>
 
 <div class="row g-4">
@@ -129,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file_excel'])) {
     <div class="col-lg-6">
         <div class="card shadow-sm border-0 h-100">
             <div class="card-header bg-white py-3">
-                <h5 class="mb-0 fw-bold text-primary"><i class="bi bi-file-earmark-arrow-up me-2"></i>Import Data Anggota (Excel / CSV)</h5>
+                <h5 class="mb-0 fw-bold font-serif text-dark">Import Data Anggota (Excel / CSV)</h5>
             </div>
             <div class="card-body p-4">
                 <p class="text-muted small">
@@ -146,8 +149,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file_excel'])) {
                 </div>
 
                 <div class="mb-4">
-                    <a href="?action=template" class="btn btn-outline-success btn-sm fw-semibold">
-                        <i class="bi bi-download me-1"></i> Unduh Format Template CSV
+                    <a href="?action=template" class="btn btn-outline-dark btn-sm fw-semibold">
+                        Unduh Format Template CSV
                     </a>
                 </div>
 
@@ -156,7 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file_excel'])) {
                         <label class="form-label fw-semibold">Pilih File CSV Hasil Simpan Excel</label>
                         <input class="form-control" type="file" name="file_excel" accept=".csv, .txt" required>
                     </div>
-                    <button type="submit" class="btn btn-primary fw-semibold w-100">
+                    <button type="submit" class="btn btn-dark fw-semibold w-100">
                         Mulai Proses Import Data
                     </button>
                 </form>
@@ -166,9 +169,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file_excel'])) {
 
     <!-- Card Export -->
     <div class="col-lg-6">
-        <div class="card shadow-sm border-0 h-100">
-            <div class="card-header bg-white py-3">
-                <h5 class="mb-0 fw-bold text-success"><i class="bi bi-file-earmark-arrow-down me-2"></i>Export & Unduh Data Anggota</h5>
+        <div class="card border h-100" style="border-radius: 12px;">
+            <div class="card-header bg-white py-3 border-bottom">
+                <h5 class="mb-0 fw-bold font-serif text-dark">Export & Unduh Data Anggota</h5>
             </div>
             <div class="card-body p-4 d-flex flex-column justify-content-between">
                 <div>
@@ -176,20 +179,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file_excel'])) {
                         Unduh salinan data seluruh anggota PAPK yang ada di database ke dalam format spreadsheet (Excel CSV) untuk kebutuhan pelaporan, arsip Mabesau, atau pencetakan fisik.
                     </p>
 
-                    <div class="card bg-light border-0 p-3 mb-4">
-                        <div class="d-flex align-items-center">
-                            <div class="display-6 text-success me-3"><i class="bi bi-table"></i></div>
-                            <div>
-                                <h6 class="fw-bold mb-1">Seluruh Database Personel</h6>
-                                <p class="text-muted small mb-0">Termasuk NRP, Pangkat, Satuan, Pos Dinas, & Titik Peta Koordinat.</p>
-                            </div>
+                    <div class="card bg-light border p-3 mb-4" style="border-radius: 8px;">
+                        <div>
+                            <h6 class="fw-bold mb-1 font-serif">Seluruh Database Personel</h6>
+                            <p class="text-muted small mb-0">Termasuk NRP, Pangkat, Satuan, Pos Dinas, & Titik Peta Koordinat.</p>
                         </div>
                     </div>
                 </div>
 
                 <div>
-                    <a href="?action=export_csv" class="btn btn-success fw-semibold w-100 py-2">
-                        <i class="bi bi-file-earmark-spreadsheet me-2"></i> Export Data ke Excel (.CSV)
+                    <a href="?action=export_csv" class="btn btn-dark fw-semibold w-100 py-2">
+                        Export Data ke Excel (.CSV)
                     </a>
                 </div>
             </div>

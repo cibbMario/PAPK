@@ -25,26 +25,26 @@ $countInfografis  = $pdo->query("SELECT COUNT(*) FROM announcements WHERE catego
 $countPengumuman  = $pdo->query("SELECT COUNT(*) FROM announcements WHERE category = 'pengumuman'")->fetchColumn();
 ?>
 
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4 border-bottom">
     <div>
-        <h1 class="h2 fw-bold text-dark mb-1">Pusat Informasi & Pengumuman Personel</h1>
+        <h1 class="h2 font-serif text-dark mb-1">Pusat Informasi & Pengumuman</h1>
         <p class="text-muted small mb-0">Warta resmi, info perwira baru, dan infografis perkembangan karier PAPK TNI AU.</p>
     </div>
 </div>
 
-<!-- Tab Kategori Filter -->
+<!-- Tab Kategori Filter Monochrome -->
 <div class="d-flex gap-2 mb-4 flex-wrap">
-    <a href="pengumuman.php?cat=all" class="btn btn-sm <?= $category === 'all' ? 'btn-primary' : 'btn-outline-secondary' ?>">
+    <a href="pengumuman.php?cat=all" class="btn btn-sm <?= $category === 'all' ? 'btn-dark' : 'btn-outline-dark' ?>">
         Semua Informasi
     </a>
-    <a href="pengumuman.php?cat=perwira_baru" class="btn btn-sm <?= $category === 'perwira_baru' ? 'btn-success text-white' : 'btn-outline-success' ?>">
-        <i class="bi bi-person-badge me-1"></i> Info Perwira Baru (<?= $countPerwiraBaru ?>)
+    <a href="pengumuman.php?cat=perwira_baru" class="btn btn-sm <?= $category === 'perwira_baru' ? 'btn-dark' : 'btn-outline-dark' ?>">
+        Info Perwira Baru (<?= $countPerwiraBaru ?>)
     </a>
-    <a href="pengumuman.php?cat=infografis" class="btn btn-sm <?= $category === 'infografis' ? 'btn-warning text-dark' : 'btn-outline-warning' ?>">
-        <i class="bi bi-bar-chart-fill me-1"></i> Infografis & Data (<?= $countInfografis ?>)
+    <a href="pengumuman.php?cat=infografis" class="btn btn-sm <?= $category === 'infografis' ? 'btn-dark' : 'btn-outline-dark' ?>">
+        Infografis & Data (<?= $countInfografis ?>)
     </a>
-    <a href="pengumuman.php?cat=pengumuman" class="btn btn-sm <?= $category === 'pengumuman' ? 'btn-info text-white' : 'btn-outline-info' ?>">
-        <i class="bi bi-megaphone me-1"></i> Edaran Kedinasan (<?= $countPengumuman ?>)
+    <a href="pengumuman.php?cat=pengumuman" class="btn btn-sm <?= $category === 'pengumuman' ? 'btn-dark' : 'btn-outline-dark' ?>">
+        Edaran Kedinasan (<?= $countPengumuman ?>)
     </a>
 </div>
 
@@ -53,20 +53,17 @@ $countPengumuman  = $pdo->query("SELECT COUNT(*) FROM announcements WHERE catego
         <?php if (!empty($announcements)): ?>
             <?php foreach ($announcements as $ann): ?>
                 <?php 
-                    $catBadge = 'bg-secondary';
                     $catTitle = 'Pengumuman';
                     if ($ann['category'] === 'perwira_baru') {
-                        $catBadge = 'bg-success';
                         $catTitle = 'Info Perwira Baru';
                     } elseif ($ann['category'] === 'infografis') {
-                        $catBadge = 'bg-warning text-dark';
                         $catTitle = 'Infografis & Visual Data';
                     }
                 ?>
-                <div class="card shadow-sm border-0 mb-4 overflow-hidden">
-                    <div class="card-header bg-white border-0 pt-3 px-4 d-flex justify-content-between align-items-center">
-                        <span class="badge <?= $catBadge ?> px-3 py-2 fw-semibold"><?= $catTitle ?></span>
-                        <small class="text-muted"><i class="bi bi-calendar3"></i> <?= date('d F Y', strtotime($ann['created_at'])) ?></small>
+                <div class="card border mb-4 overflow-hidden" style="border-radius: 12px;">
+                    <div class="card-header bg-white border-bottom pt-3 px-4 d-flex justify-content-between align-items-center">
+                        <span class="badge bg-dark text-white px-3 py-2 fw-semibold"><?= $catTitle ?></span>
+                        <small class="text-muted"><?= date('d F Y', strtotime($ann['created_at'])) ?></small>
                     </div>
 
                     <?php if (!empty($ann['image_path']) && file_exists(__DIR__ . '/../' . $ann['image_path'])): ?>
@@ -74,7 +71,7 @@ $countPengumuman  = $pdo->query("SELECT COUNT(*) FROM announcements WHERE catego
                     <?php endif; ?>
 
                     <div class="card-body p-4">
-                        <h4 class="card-title fw-bold text-dark mb-2"><?= htmlspecialchars($ann['title']) ?></h4>
+                        <h4 class="card-title fw-bold text-dark font-serif mb-2"><?= htmlspecialchars($ann['title']) ?></h4>
                         <p class="text-muted small mb-3">
                             Dipublikasikan oleh: <strong><?= htmlspecialchars($ann['author_name'] ?? 'Mabesau / Staf Admin') ?></strong>
                         </p>
@@ -86,7 +83,7 @@ $countPengumuman  = $pdo->query("SELECT COUNT(*) FROM announcements WHERE catego
                 </div>
             <?php endforeach; ?>
         <?php else: ?>
-            <div class="card border-0 shadow-sm p-4 text-center">
+            <div class="card border p-4 text-center bg-white" style="border-radius: 12px;">
                 <p class="text-muted mb-0">Tidak ada pengumuman atau konten pada kategori ini.</p>
             </div>
         <?php endif; ?>
@@ -94,29 +91,29 @@ $countPengumuman  = $pdo->query("SELECT COUNT(*) FROM announcements WHERE catego
 
     <!-- Sidebar Widget Info -->
     <div class="col-lg-3">
-        <div class="card shadow-sm border-0 mb-4 bg-light">
+        <div class="card border mb-4 bg-light" style="border-radius: 12px;">
             <div class="card-body p-3">
-                <h6 class="fw-bold mb-2 text-primary"><i class="bi bi-shield-check"></i> Kanal Resmi</h6>
+                <h6 class="fw-bold mb-2 text-dark font-serif">Kanal Resmi</h6>
                 <p class="text-muted small mb-0">
                     Seluruh informasi resmi pembinaan profesi dan karier perwira bersumber langsung dari Disminpersau / Spersau.
                 </p>
             </div>
         </div>
 
-        <div class="card shadow-sm border-0 p-3">
-            <h6 class="fw-bold mb-2">Statistik Konten</h6>
+        <div class="card border p-3 bg-white" style="border-radius: 12px;">
+            <h6 class="fw-bold mb-3 font-serif">Statistik Konten</h6>
             <ul class="list-unstyled small text-muted mb-0">
-                <li class="d-flex justify-content-between py-1 border-bottom">
+                <li class="d-flex justify-content-between py-2 border-bottom">
                     <span>Perwira Baru</span>
-                    <strong class="text-success"><?= $countPerwiraBaru ?></strong>
+                    <strong class="text-dark"><?= $countPerwiraBaru ?></strong>
                 </li>
-                <li class="d-flex justify-content-between py-1 border-bottom">
+                <li class="d-flex justify-content-between py-2 border-bottom">
                     <span>Infografis</span>
-                    <strong class="text-warning"><?= $countInfografis ?></strong>
+                    <strong class="text-dark"><?= $countInfografis ?></strong>
                 </li>
-                <li class="d-flex justify-content-between py-1">
+                <li class="d-flex justify-content-between py-2">
                     <span>Edaran Dinas</span>
-                    <strong class="text-info"><?= $countPengumuman ?></strong>
+                    <strong class="text-dark"><?= $countPengumuman ?></strong>
                 </li>
             </ul>
         </div>

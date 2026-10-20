@@ -73,13 +73,13 @@ $dataStmt->bindValue(':offset', $offset, PDO::PARAM_INT);
 $dataStmt->execute();
 $members = $dataStmt->fetchAll();
 ?>
-<h1 class="mt-4">Daftar Anggota</h1>
+<h1 class="mt-4 font-serif">Daftar Anggota</h1>
 <div class="d-flex justify-content-between align-items-center mb-3">
     <form class="d-flex" method="get" action="anggota.php">
         <input class="form-control me-2" type="search" name="search" placeholder="Cari Nama / NRP" value="<?= htmlspecialchars($search) ?>" />
-        <button class="btn btn-outline-secondary" type="submit">Cari</button>
+        <button class="btn btn-outline-dark" type="submit">Cari</button>
     </form>
-    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#memberModal" data-action="add">Tambah Anggota</button>
+    <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#memberModal" data-action="add">Tambah Anggota</button>
 </div>
 <table class="table table-sm table-hover">
     <thead class="table-light">
@@ -101,15 +101,15 @@ $members = $dataStmt->fetchAll();
             <td><?= htmlspecialchars($m['name']) ?></td>
             <td><?= htmlspecialchars($m['rank']) ?></td>
             <td><?= htmlspecialchars($m['unit']) ?></td>
-            <td><?= htmlspecialchars($m['status']) ?></td>
+            <td><span class="badge bg-light text-dark border"><?= htmlspecialchars($m['status']) ?></span></td>
             <td>
-                <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#memberModal"
+                <button class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#memberModal"
                         data-action="edit" data-id="<?= $m['id'] ?>" data-nrp="<?= htmlspecialchars($m['nrp_nia']) ?>"
                         data-name="<?= htmlspecialchars($m['name']) ?>" data-rank="<?= htmlspecialchars($m['rank']) ?>"
                         data-unit="<?= htmlspecialchars($m['unit']) ?>" data-status="<?= htmlspecialchars($m['status']) ?>">
                     Edit
                 </button>
-                <a href="?action=delete&id=<?= $m['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Hapus anggota ini?');">Hapus</a>
+                <a href="?action=delete&id=<?= $m['id'] ?>" class="btn btn-sm btn-outline-dark" onclick="return confirm('Hapus anggota ini?');">Hapus</a>
             </td>
         </tr>
         <?php endforeach; ?>

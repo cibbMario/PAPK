@@ -32,15 +32,15 @@ $notifications = $stmt->fetchAll();
 $unreadCount = $pdo->query("SELECT COUNT(*) FROM notifications WHERE user_id = $userId AND is_read = 0")->fetchColumn();
 ?>
 
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4 border-bottom">
     <div>
-        <h1 class="h2 mb-1"><i class="bi bi-bell-fill text-warning me-2"></i>Pusat Notifikasi Kedinasan</h1>
+        <h1 class="h2 mb-1 font-serif">Pusat Notifikasi Kedinasan</h1>
         <p class="text-muted small mb-0">Riwayat pemberitahuan persetujuan data, edaran resmi, dan pengumuman kedinasan.</p>
     </div>
     <div class="btn-toolbar mb-2 mb-md-0">
         <?php if ($unreadCount > 0): ?>
-            <a href="notifikasi.php?action=mark_all_read" class="btn btn-sm btn-outline-primary">
-                <i class="bi bi-check2-all me-1"></i> Tandai Semua Dibaca
+            <a href="notifikasi.php?action=mark_all_read" class="btn btn-sm btn-outline-dark">
+                Tandai Semua Dibaca
             </a>
         <?php endif; ?>
     </div>
@@ -49,28 +49,19 @@ $unreadCount = $pdo->query("SELECT COUNT(*) FROM notifications WHERE user_id = $
 <div class="row">
     <div class="col-lg-9 mx-auto">
         <?php if (count($notifications) > 0): ?>
-            <div class="list-group shadow-sm border-0 mb-4">
+            <div class="list-group border mb-4" style="border-radius: 12px; overflow: hidden;">
                 <?php foreach ($notifications as $n): 
                     $isUnread = ($n['is_read'] == 0);
-                    $icon = 'bi-info-circle-fill text-primary';
-                    if (strpos($n['type'], 'approved') !== false) {
-                        $icon = 'bi-check-circle-fill text-success';
-                    } elseif (strpos($n['type'], 'rejected') !== false) {
-                        $icon = 'bi-x-circle-fill text-danger';
-                    } elseif (strpos($n['type'], 'pengumuman') !== false) {
-                        $icon = 'bi-megaphone-fill text-warning';
-                    }
                 ?>
-                    <div class="list-group-item list-group-item-action p-3 d-flex align-items-start <?= $isUnread ? 'bg-light border-start border-4 border-primary' : '' ?>">
-                        <div class="fs-4 me-3 mt-1"><i class="bi <?= $icon ?>"></i></div>
+                    <div class="list-group-item list-group-item-action p-3 d-flex align-items-start <?= $isUnread ? 'bg-light border-start border-4 border-dark' : '' ?>">
                         <div class="flex-grow-1">
                             <div class="d-flex w-100 justify-content-between align-items-center mb-1">
-                                <span class="badge bg-secondary text-uppercase" style="font-size: 10px;"><?= htmlspecialchars($n['type']) ?></span>
-                                <small class="text-muted"><i class="bi bi-clock me-1"></i><?= date('d M Y, H:i', strtotime($n['created_at'])) ?> WIB</small>
+                                <span class="badge <?= $isUnread ? 'bg-dark text-white' : 'bg-light text-dark border' ?> text-uppercase" style="font-size: 10px; letter-spacing: 0.5px;"><?= htmlspecialchars($n['type']) ?></span>
+                                <small class="text-muted"><?= date('d M Y, H:i', strtotime($n['created_at'])) ?> WIB</small>
                             </div>
                             <p class="mb-1 text-dark" style="white-space: pre-wrap;"><?= htmlspecialchars($n['message']) ?></p>
                             <?php if ($isUnread): ?>
-                                <a href="notifikasi.php?action=read&id=<?= $n['id'] ?>" class="btn btn-sm btn-link text-decoration-none p-0" style="font-size: 11px;">
+                                <a href="notifikasi.php?action=read&id=<?= $n['id'] ?>" class="btn btn-sm btn-link text-dark text-decoration-none p-0 fw-semibold" style="font-size: 11px;">
                                     Tandai telah dibaca
                                 </a>
                             <?php endif; ?>
@@ -79,11 +70,10 @@ $unreadCount = $pdo->query("SELECT COUNT(*) FROM notifications WHERE user_id = $
                 <?php endforeach; ?>
             </div>
         <?php else: ?>
-            <div class="card shadow-sm border-0 py-5 text-center">
+            <div class="card border py-5 text-center bg-white" style="border-radius: 12px;">
                 <div class="card-body">
-                    <i class="bi bi-bell-slash fs-1 text-muted opacity-50 mb-3 d-block"></i>
-                    <h5 class="fw-bold text-muted">Belum Ada Notifikasi</h5>
-                    <p class="text-muted small">Pemberitahuan persetujuan data dan pengumuman dinas baru akan ditampilkan di sini.</p>
+                    <h5 class="fw-bold text-dark font-serif mb-1">Belum Ada Notifikasi</h5>
+                    <p class="text-muted small mb-0">Pemberitahuan persetujuan data dan pengumuman dinas baru akan ditampilkan di sini.</p>
                 </div>
             </div>
         <?php endif; ?>

@@ -121,28 +121,28 @@ $members = $dataStmt->fetchAll();
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <div>
-        <h1 class="h2 mb-1">Dashboard Administrator</h1>
-        <p class="text-muted small mb-0">Kelola dan pantau seluruh data personel anggota PAPK TNI AU.</p>
+        <h1 class="h2 font-serif fw-bold mb-1">Pengelolaan Anggota PAPK</h1>
+        <p class="text-muted small mb-0">Manajemen direktori personel perwira karier TNI AU.</p>
     </div>
     <div class="btn-toolbar mb-2 mb-md-0">
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#memberModal" data-action="add">
-            <i class="bi bi-person-plus-fill me-1"></i> Tambah Anggota Baru
+        <button class="btn btn-dark btn-sm px-3" data-bs-toggle="modal" data-bs-target="#memberModal" data-action="add">
+            Tambah Anggota Baru
         </button>
     </div>
 </div>
 
 <!-- Member Management Table Card -->
-<div class="card shadow-sm border-0 mb-4">
-    <div class="card-header bg-white py-3">
+<div class="card border mb-4" style="border-radius: 12px; overflow: hidden;">
+    <div class="card-header bg-white py-3 border-bottom">
         <div class="row align-items-center g-2">
             <div class="col-md-4">
-                <h5 class="mb-0 fw-bold">Daftar Seluruh Anggota PAPK</h5>
+                <h5 class="mb-0 fw-bold font-serif">Daftar Seluruh Anggota PAPK</h5>
             </div>
             <div class="col-md-8">
                 <form class="d-flex justify-content-md-end gap-2" method="get" action="dashboard.php">
                     <input class="form-control form-control-sm" style="max-width: 250px;" type="search" name="search" 
                            placeholder="Cari Nama / NRP / Satuan..." value="<?= htmlspecialchars($search) ?>" />
-                    <button class="btn btn-sm btn-outline-secondary" type="submit">Cari</button>
+                    <button class="btn btn-sm btn-outline-dark" type="submit">Cari</button>
                     <?php if ($search !== ''): ?>
                         <a href="dashboard.php" class="btn btn-sm btn-link text-decoration-none text-muted">Reset</a>
                     <?php endif; ?>
@@ -175,31 +175,31 @@ $members = $dataStmt->fetchAll();
                                     <?php 
                                         $avatarImg = (!empty($m['photo_path']) && file_exists(__DIR__ . '/../' . $m['photo_path'])) 
                                                      ? '../' . htmlspecialchars($m['photo_path']) 
-                                                     : "https://ui-avatars.com/api/?name=" . urlencode($m['name']) . "&size=40&background=1e3c72&color=fff";
+                                                     : "https://ui-avatars.com/api/?name=" . urlencode($m['name']) . "&size=40&background=0f172a&color=fff";
                                     ?>
-                                    <img src="<?= $avatarImg ?>" class="rounded-circle me-2 border shadow-sm" style="width: 38px; height: 38px; object-fit: cover;" alt="Avatar">
+                                    <img src="<?= $avatarImg ?>" class="rounded-circle me-2 border" style="width: 38px; height: 38px; object-fit: cover;" alt="Avatar">
                                     <div>
                                         <strong><?= htmlspecialchars($m['name']) ?></strong><br>
-                                        <small class="text-muted"><i class="bi bi-telephone"></i> <?= htmlspecialchars($m['phone'] ?: '-') ?></small>
+                                        <small class="text-muted"><?= htmlspecialchars($m['phone'] ?: '-') ?></small>
                                     </div>
                                 </div>
                             </td>
-                            <td><span class="badge bg-secondary"><?= htmlspecialchars($m['rank']) ?></span></td>
+                            <td><span class="badge bg-light text-dark border"><?= htmlspecialchars($m['rank']) ?></span></td>
                             <td>
                                 <div><?= htmlspecialchars($m['unit']) ?></div>
-                                <small class="text-muted"><i class="bi bi-geo-alt"></i> <?= htmlspecialchars($m['location_name'] ?: '-') ?></small>
+                                <small class="text-muted"><?= htmlspecialchars($m['location_name'] ?: '-') ?></small>
                             </td>
                             <td>
                                 <?php if ($m['status'] === 'aktif'): ?>
-                                    <span class="badge bg-success">Aktif</span>
+                                    <span class="badge bg-dark text-white">Aktif</span>
                                 <?php elseif ($m['status'] === 'pensiun'): ?>
-                                    <span class="badge bg-secondary">Pensiun</span>
+                                    <span class="badge bg-light text-dark border">Pensiun</span>
                                 <?php else: ?>
-                                    <span class="badge bg-danger">Non-aktif</span>
+                                    <span class="badge bg-white text-dark border border-dark">Non-aktif</span>
                                 <?php endif; ?>
                             </td>
                             <td class="pe-3 text-center">
-                                <button class="btn btn-sm btn-outline-warning me-1" data-bs-toggle="modal" data-bs-target="#memberModal"
+                                <button class="btn btn-sm btn-outline-dark me-1" data-bs-toggle="modal" data-bs-target="#memberModal"
                                         data-action="edit" 
                                         data-id="<?= $m['id'] ?>" 
                                         data-nrp="<?= htmlspecialchars($m['nrp_nia']) ?>"
@@ -211,7 +211,7 @@ $members = $dataStmt->fetchAll();
                                         data-status="<?= htmlspecialchars($m['status']) ?>">
                                     Edit
                                 </button>
-                                <a href="?action=delete&id=<?= $m['id'] ?>" class="btn btn-sm btn-outline-danger" 
+                                <a href="?action=delete&id=<?= $m['id'] ?>" class="btn btn-sm btn-outline-dark" 
                                    onclick="return confirm('Apakah Anda yakin ingin menghapus anggota ini?');">
                                     Hapus
                                 </a>

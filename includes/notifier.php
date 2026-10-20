@@ -136,11 +136,11 @@ if (!function_exists('dispatchWhatsApp')) {
         $sender = getGatewaySetting('wa_sender_number', '0811-9876-PAPK');
 
         // Template pesan WhatsApp dinas
-        $waBody = "🇮🇩 *KEMENTERIAN PERTAHANAN / MABESAU*\n";
+        $waBody = "*KEMENTERIAN PERTAHANAN / MABESAU*\n";
         $waBody .= "*Sistem Informasi Perwira Karier (PAPK)*\n";
         $waBody .= "===============================\n";
         $waBody .= "Kepada Yth: *" . addslashes($recipientName) . "*\n\n";
-        $waBody .= "📌 *NOTIFIKASI: " . strtoupper($title) . "*\n";
+        $waBody .= "*NOTIFIKASI: " . strtoupper($title) . "*\n";
         $waBody .= $message . "\n\n";
         $waBody .= "-------------------------------\n";
         $waBody .= "_Pesan resmi otomatis dikirim melalui Gateway PAPK TNI AU._\n";

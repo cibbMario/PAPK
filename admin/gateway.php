@@ -73,27 +73,27 @@ $logs = $stmtLogs->fetchAll();
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <div>
-        <h1 class="h2 mb-1"><i class="bi bi-broadcast text-success me-2"></i>WhatsApp & Notification Gateway</h1>
+        <h1 class="h2 font-serif fw-bold mb-1">WhatsApp & Notification Gateway</h1>
         <p class="text-muted small mb-0">Manajemen pengiriman notifikasi otomatis dan integrasi WhatsApp dinas personel PAPK TNI AU.</p>
     </div>
     <div class="btn-toolbar mb-2 mb-md-0">
-        <a href="gateway.php" class="btn btn-sm btn-outline-secondary me-2"><i class="bi bi-arrow-clockwise"></i> Refresh</a>
-        <a href="gateway.php?action=clear_logs" onclick="return confirm('Kosongkan semua log pengiriman?');" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i> Hapus Log</a>
+        <a href="gateway.php" class="btn btn-sm btn-outline-secondary me-2">Segarkan</a>
+        <a href="gateway.php?action=clear_logs" onclick="return confirm('Kosongkan semua log pengiriman?');" class="btn btn-sm btn-outline-danger">Hapus Log</a>
     </div>
 </div>
 
 <!-- Statistik Kartu -->
 <div class="row g-3 mb-4">
     <div class="col-md-3">
-        <div class="card shadow-sm border-0 border-start border-4 border-primary">
+        <div class="card border" style="border-radius: 12px;">
             <div class="card-body py-3">
                 <div class="text-muted small fw-semibold">Status Gateway Saat Ini</div>
                 <div class="d-flex align-items-center mt-1">
                     <?php if ($settings['wa_mode'] === 'live'): ?>
-                        <span class="badge bg-success me-2 fs-6"><i class="bi bi-check-circle-fill"></i> LIVE API</span>
+                        <span class="badge bg-dark text-white me-2 fs-6">LIVE API</span>
                         <small class="text-muted"><?= strtoupper($settings['wa_provider']) ?></small>
                     <?php else: ?>
-                        <span class="badge bg-warning text-dark me-2 fs-6"><i class="bi bi-cpu-fill"></i> SIMULASI</span>
+                        <span class="badge bg-light text-dark border me-2 fs-6">SIMULASI</span>
                         <small class="text-muted">Safe Demo Mode</small>
                     <?php endif; ?>
                 </div>
@@ -101,26 +101,26 @@ $logs = $stmtLogs->fetchAll();
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card shadow-sm border-0 border-start border-4 border-info">
+        <div class="card border" style="border-radius: 12px;">
             <div class="card-body py-3">
                 <div class="text-muted small fw-semibold">Total Log Notifikasi</div>
-                <div class="h3 mb-0 fw-bold text-dark mt-1"><?= number_format($totalLogs) ?></div>
+                <div class="h3 mb-0 fw-bold text-dark mt-1 font-serif"><?= number_format($totalLogs) ?></div>
             </div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card shadow-sm border-0 border-start border-4 border-success">
+        <div class="card border" style="border-radius: 12px;">
             <div class="card-body py-3">
                 <div class="text-muted small fw-semibold">Terkirim / Live API</div>
-                <div class="h3 mb-0 fw-bold text-success mt-1"><?= number_format($sentCount) ?></div>
+                <div class="h3 mb-0 fw-bold text-dark mt-1 font-serif"><?= number_format($sentCount) ?></div>
             </div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card shadow-sm border-0 border-start border-4 border-secondary">
+        <div class="card border" style="border-radius: 12px;">
             <div class="card-body py-3">
                 <div class="text-muted small fw-semibold">Tercatat Simulasi</div>
-                <div class="h3 mb-0 fw-bold text-secondary mt-1"><?= number_format($simulatedCount) ?></div>
+                <div class="h3 mb-0 fw-bold text-dark mt-1 font-serif"><?= number_format($simulatedCount) ?></div>
             </div>
         </div>
     </div>
@@ -129,10 +129,9 @@ $logs = $stmtLogs->fetchAll();
 <div class="row g-4">
     <!-- Kolom Kiri: Form Pengaturan Gateway -->
     <div class="col-lg-7">
-        <div class="card shadow-sm border-0 mb-4">
+        <div class="card border mb-4" style="border-radius: 12px;">
             <div class="card-header bg-white py-3 border-bottom d-flex align-items-center">
-                <i class="bi bi-sliders text-primary me-2 fs-5"></i>
-                <h5 class="mb-0 fw-bold">Konfigurasi WhatsApp Gateway API</h5>
+                <h5 class="mb-0 fw-bold font-serif">Konfigurasi WhatsApp Gateway API</h5>
             </div>
             <div class="card-body">
                 <form method="POST" action="gateway.php">
@@ -174,7 +173,7 @@ $logs = $stmtLogs->fetchAll();
 
                     <hr class="my-4">
 
-                    <h6 class="fw-bold mb-3"><i class="bi bi-bell-fill text-warning me-2"></i>Pemicu Notifikasi Otomatis</h6>
+                    <h6 class="fw-bold mb-3 font-serif">Pemicu Notifikasi Otomatis</h6>
                     
                     <div class="form-check form-switch mb-2">
                         <input class="form-check-input" type="checkbox" name="notify_approval" id="checkAppr" value="1" <?= $settings['notify_approval'] === '1' ? 'checked' : '' ?>>
@@ -198,7 +197,7 @@ $logs = $stmtLogs->fetchAll();
                     </div>
 
                     <div class="d-flex justify-content-end">
-                        <button type="submit" class="btn btn-primary px-4"><i class="bi bi-check2-circle me-1"></i> Simpan Konfigurasi</button>
+                        <button type="submit" class="btn btn-dark px-4">Simpan Konfigurasi</button>
                     </div>
                 </form>
             </div>
@@ -207,10 +206,9 @@ $logs = $stmtLogs->fetchAll();
 
     <!-- Kolom Kanan: Pengujian Langsung -->
     <div class="col-lg-5">
-        <div class="card shadow-sm border-0 mb-4 bg-light">
+        <div class="card border mb-4 bg-light" style="border-radius: 12px;">
             <div class="card-header bg-white py-3 border-bottom d-flex align-items-center">
-                <i class="bi bi-send-fill text-success me-2 fs-5"></i>
-                <h5 class="mb-0 fw-bold">Uji Coba Kirim Notifikasi</h5>
+                <h5 class="mb-0 fw-bold font-serif">Uji Coba Kirim Notifikasi</h5>
             </div>
             <div class="card-body">
                 <p class="small text-muted">Gunakan modul ini untuk menguji format pesan WhatsApp dan memastikan alur gateway berjalan lancar.</p>
@@ -237,8 +235,8 @@ $logs = $stmtLogs->fetchAll();
                         <textarea class="form-control form-control-sm" name="test_message" rows="3" required>Diberitahukan kepada Letda Sus Yanuar untuk menghadiri verifikasi berkas personel di Mabesau besok pukul 08.00 WIB.</textarea>
                     </div>
 
-                    <button type="submit" class="btn btn-success btn-sm w-100 fw-semibold">
-                        <i class="bi bi-whatsapp me-1"></i> Kirim Pesan Uji Coba Sekarang
+                    <button type="submit" class="btn btn-dark btn-sm w-100 fw-semibold py-2">
+                        Kirim Pesan Uji Coba Sekarang
                     </button>
                 </form>
             </div>
@@ -247,10 +245,10 @@ $logs = $stmtLogs->fetchAll();
 </div>
 
 <!-- Tabel Riwayat Log Notifikasi -->
-<div class="card shadow-sm border-0 mb-4">
+<div class="card border mb-4" style="border-radius: 12px; overflow: hidden;">
     <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
-        <h5 class="mb-0 fw-bold"><i class="bi bi-clock-history me-2"></i>Log Pengiriman Pesan Terkini (50 Terakhir)</h5>
-        <span class="badge bg-secondary"><?= count($logs) ?> Catatan</span>
+        <h5 class="mb-0 fw-bold font-serif">Log Pengiriman Pesan Terkini (50 Terakhir)</h5>
+        <span class="badge bg-light text-dark border"><?= count($logs) ?> Catatan</span>
     </div>
     <div class="card-body p-0">
         <div class="table-responsive">
@@ -276,7 +274,7 @@ $logs = $stmtLogs->fetchAll();
                                 <td><code><?= htmlspecialchars($log['recipient']) ?></code></td>
                                 <td><span class="badge bg-light text-dark border"><?= htmlspecialchars($log['title']) ?></span></td>
                                 <td>
-                                    <button class="btn btn-xs btn-outline-secondary btn-sm py-0" data-bs-toggle="collapse" data-bs-target="#msgDetail<?= $log['id'] ?>">
+                                    <button class="btn btn-xs btn-outline-dark btn-sm py-0" data-bs-toggle="collapse" data-bs-target="#msgDetail<?= $log['id'] ?>">
                                         Lihat Isi Pesan
                                     </button>
                                     <div class="collapse mt-2" id="msgDetail<?= $log['id'] ?>">
@@ -287,11 +285,11 @@ $logs = $stmtLogs->fetchAll();
                                 </td>
                                 <td class="text-center">
                                     <?php if ($log['status'] === 'sent'): ?>
-                                        <span class="badge bg-success"><i class="bi bi-check-all"></i> Terkirim</span>
+                                        <span class="badge bg-dark text-white">Terkirim</span>
                                     <?php elseif ($log['status'] === 'simulated'): ?>
-                                        <span class="badge bg-info text-dark"><i class="bi bi-cpu"></i> Simulasi</span>
+                                        <span class="badge bg-light text-dark border">Simulasi</span>
                                     <?php else: ?>
-                                        <span class="badge bg-danger"><i class="bi bi-x-circle"></i> Gagal</span>
+                                        <span class="badge bg-white text-dark border border-dark">Gagal</span>
                                     <?php endif; ?>
                                 </td>
                             </tr>

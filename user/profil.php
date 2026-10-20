@@ -62,37 +62,37 @@ $avatarUrl = (!empty($displayPhoto) && file_exists(__DIR__ . '/../' . $displayPh
              : "https://ui-avatars.com/api/?name=" . urlencode($user['name'] ?: $user['username']) . "&size=128&background=1e3c72&color=fff";
 ?>
 
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Profil Saya</h1>
-    <a href="ajukan-perubahan.php" class="btn btn-outline-primary btn-sm">Ajukan Perubahan Data</a>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4 border-bottom">
+    <h1 class="h2 font-serif">Profil Saya</h1>
+    <a href="ajukan-perubahan.php" class="btn btn-outline-dark btn-sm">Ajukan Perubahan Data</a>
 </div>
 
 <div class="row">
     <div class="col-md-4 mb-4">
-        <div class="card shadow-sm border-0 text-center p-3">
+        <div class="card border text-center p-3" style="border-radius: 12px;">
             <div class="card-body">
                 <div class="position-relative d-inline-block mb-3">
-                    <img src="<?= $avatarUrl ?>" class="rounded-circle img-fluid border border-3 border-primary shadow-sm" 
-                         style="width: 130px; height: 130px; object-fit: cover;" alt="Foto Profil">
+                    <img src="<?= $avatarUrl ?>" class="rounded-circle img-fluid border border-dark" 
+                         style="width: 120px; height: 120px; object-fit: cover;" alt="Foto Profil">
                 </div>
 
-                <h5 class="fw-bold mb-1"><?= htmlspecialchars($user['name'] ?: $user['username']) ?></h5>
-                <p class="text-muted small mb-2"><?= htmlspecialchars($user['rank'] ?? 'Perwira') ?> - <?= htmlspecialchars($user['unit'] ?? 'TNI AU') ?></p>
-                <span class="badge bg-success mb-2"><?= strtoupper($user['member_status'] ?? 'AKTIF') ?></span>
-                <p class="text-muted small mb-3">NRP/NIA: <?= htmlspecialchars($user['nrp_nia'] ?? '-') ?></p>
+                <h5 class="fw-bold mb-1 font-serif"><?= htmlspecialchars($user['name'] ?: $user['username']) ?></h5>
+                <p class="text-muted small mb-2"><?= htmlspecialchars($user['rank'] ?? 'Perwira') ?> — <?= htmlspecialchars($user['unit'] ?? 'TNI AU') ?></p>
+                <span class="badge bg-dark text-white mb-3"><?= strtoupper($user['member_status'] ?? 'AKTIF') ?></span>
+                <p class="text-muted small mb-3">NRP / NIA: <?= htmlspecialchars($user['nrp_nia'] ?? '-') ?></p>
 
                 <!-- Tombol Ganti Foto -->
-                <button class="btn btn-outline-primary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#uploadPhotoModal">
-                    <i class="bi bi-camera-fill me-1"></i> Ganti Foto Profil
+                <button class="btn btn-outline-dark btn-sm w-100" data-bs-toggle="modal" data-bs-target="#uploadPhotoModal">
+                    Ganti Foto Profil
                 </button>
             </div>
         </div>
     </div>
 
     <div class="col-md-8">
-        <div class="card shadow-sm border-0 mb-4">
-            <div class="card-header bg-white py-3">
-                <h5 class="mb-0 fw-bold">Informasi Data Keanggotaan</h5>
+        <div class="card border mb-4" style="border-radius: 12px;">
+            <div class="card-header bg-white py-3 border-bottom">
+                <h5 class="mb-0 fw-bold font-serif">Informasi Data Keanggotaan</h5>
             </div>
             <div class="card-body">
                 <table class="table table-borderless">
@@ -134,10 +134,10 @@ $avatarUrl = (!empty($displayPhoto) && file_exists(__DIR__ . '/../' . $displayPh
             $userComps = $stmtC->fetchAll();
         }
         ?>
-        <div class="card shadow-sm border-0 mb-4">
-            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                <h5 class="mb-0 fw-bold"><i class="bi bi-award text-primary me-2"></i>Portofolio & Kompetensi Terverifikasi</h5>
-                <a href="kompetensi.php" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil-square me-1"></i> Kelola Portofolio</a>
+        <div class="card border mb-4" style="border-radius: 12px;">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-bottom">
+                <h5 class="mb-0 fw-bold font-serif">Portofolio & Kompetensi Terverifikasi</h5>
+                <a href="kompetensi.php" class="btn btn-sm btn-outline-dark">Kelola Portofolio</a>
             </div>
             <div class="card-body">
                 <?php if (count($userComps) > 0): ?>

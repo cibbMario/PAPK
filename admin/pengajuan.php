@@ -92,16 +92,19 @@ $fieldNames = [
 ?>
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Verifikasi Pengajuan Perubahan Data</h1>
+    <div>
+        <h1 class="h2 font-serif fw-bold mb-1">Verifikasi Pengajuan Perubahan Data</h1>
+        <p class="text-muted small mb-0">Persetujuan atau penolakan permohonan pembaruan data mandiri personel.</p>
+    </div>
     <div class="btn-group" role="group">
-        <a href="pengajuan.php?status=all" class="btn btn-sm <?= $statusFilter === 'all' ? 'btn-primary' : 'btn-outline-primary' ?>">Semua</a>
-        <a href="pengajuan.php?status=pending" class="btn btn-sm <?= $statusFilter === 'pending' ? 'btn-warning text-dark' : 'btn-outline-warning' ?>">Pending</a>
-        <a href="pengajuan.php?status=approved" class="btn btn-sm <?= $statusFilter === 'approved' ? 'btn-success' : 'btn-outline-success' ?>">Disetujui</a>
-        <a href="pengajuan.php?status=rejected" class="btn btn-sm <?= $statusFilter === 'rejected' ? 'btn-danger' : 'btn-outline-danger' ?>">Ditolak</a>
+        <a href="pengajuan.php?status=all" class="btn btn-sm <?= $statusFilter === 'all' ? 'btn-dark' : 'btn-outline-secondary' ?>">Semua</a>
+        <a href="pengajuan.php?status=pending" class="btn btn-sm <?= $statusFilter === 'pending' ? 'btn-dark' : 'btn-outline-secondary' ?>">Pending</a>
+        <a href="pengajuan.php?status=approved" class="btn btn-sm <?= $statusFilter === 'approved' ? 'btn-dark' : 'btn-outline-secondary' ?>">Disetujui</a>
+        <a href="pengajuan.php?status=rejected" class="btn btn-sm <?= $statusFilter === 'rejected' ? 'btn-dark' : 'btn-outline-secondary' ?>">Ditolak</a>
     </div>
 </div>
 
-<div class="card shadow-sm border-0">
+<div class="card border" style="border-radius: 12px; overflow: hidden;">
     <div class="card-body p-0">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
@@ -125,25 +128,25 @@ $fieldNames = [
                                     <strong><?= htmlspecialchars($r['member_name']) ?></strong><br>
                                     <small class="text-muted">NRP: <?= htmlspecialchars($r['nrp_nia']) ?> (User: <?= htmlspecialchars($r['username']) ?>)</small>
                                 </td>
-                                <td><span class="badge bg-secondary"><?= $fieldNames[$r['field']] ?? $r['field'] ?></span></td>
+                                <td><span class="badge bg-light text-dark border"><?= $fieldNames[$r['field']] ?? $r['field'] ?></span></td>
                                 <td class="text-secondary small"><?= htmlspecialchars($r['old_value'] ?: '-') ?></td>
-                                <td class="fw-semibold text-primary"><?= htmlspecialchars($r['new_value']) ?></td>
+                                <td class="fw-semibold text-dark"><?= htmlspecialchars($r['new_value']) ?></td>
                                 <td>
                                     <?php if ($r['status'] === 'pending'): ?>
-                                        <span class="badge bg-warning text-dark">Pending</span>
+                                        <span class="badge bg-light text-dark border">Pending</span>
                                     <?php elseif ($r['status'] === 'approved'): ?>
-                                        <span class="badge bg-success">Disetujui</span>
+                                        <span class="badge bg-dark text-white">Disetujui</span>
                                     <?php else: ?>
-                                        <span class="badge bg-danger">Ditolak</span>
+                                        <span class="badge bg-white text-dark border border-dark">Ditolak</span>
                                     <?php endif; ?>
                                 </td>
                                 <td class="pe-3 text-center">
                                     <?php if ($r['status'] === 'pending'): ?>
-                                        <button class="btn btn-sm btn-success me-1" data-bs-toggle="modal" data-bs-target="#actionModal" 
+                                        <button class="btn btn-sm btn-dark me-1" data-bs-toggle="modal" data-bs-target="#actionModal" 
                                                 data-id="<?= $r['id'] ?>" data-action="approve" data-name="<?= htmlspecialchars($r['member_name']) ?>">
                                             Setujui
                                         </button>
-                                        <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#actionModal" 
+                                        <button class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#actionModal" 
                                                 data-id="<?= $r['id'] ?>" data-action="reject" data-name="<?= htmlspecialchars($r['member_name']) ?>">
                                             Tolak
                                         </button>
@@ -169,12 +172,12 @@ $fieldNames = [
 <!-- Modal Verifikasi -->
 <div class="modal fade" id="actionModal" tabindex="-1">
     <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content" style="border-radius: 12px; overflow: hidden;">
             <form method="POST" action="pengajuan.php">
                 <input type="hidden" name="request_id" id="modalRequestId">
                 <input type="hidden" name="action" id="modalActionType">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalTitle">Konfirmasi Aksi</h5>
+                    <h5 class="modal-title font-serif" id="modalTitle">Konfirmasi Aksi</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -185,8 +188,8 @@ $fieldNames = [
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary" id="modalSubmitBtn">Konfirmasi</button>
+                    <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-dark" id="modalSubmitBtn">Konfirmasi</button>
                 </div>
             </form>
         </div>

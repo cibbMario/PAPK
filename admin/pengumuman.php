@@ -80,15 +80,15 @@ $announcements = $stmt->fetchAll();
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <div>
-        <h1 class="h2">Kelola Info, Perwira Baru & Infografis</h1>
-        <p class="text-muted small mb-0">Publikasikan pengumuman dinas, informasi perwira baru lulusan kawah candradimuka, dan visual infografis.</p>
+        <h1 class="h2 font-serif fw-bold mb-1">Kelola Pengumuman & Berita</h1>
+        <p class="text-muted small mb-0">Publikasikan edaran kedinasan dan informasi penting bagi seluruh perwira.</p>
     </div>
-    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#announcementModal" data-action="add">
-        + Buat Informasi Baru
+    <button class="btn btn-dark btn-sm px-3" data-bs-toggle="modal" data-bs-target="#announcementModal" data-action="add">
+        Buat Informasi Baru
     </button>
 </div>
 
-<div class="card shadow-sm border-0">
+<div class="card border" style="border-radius: 12px; overflow: hidden;">
     <div class="card-body p-0">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
@@ -112,24 +112,24 @@ $announcements = $stmt->fetchAll();
                                 </td>
                                 <td>
                                     <?php if ($ann['category'] === 'perwira_baru'): ?>
-                                        <span class="badge bg-success">Info Perwira Baru</span>
+                                        <span class="badge bg-dark text-white">Info Perwira Baru</span>
                                     <?php elseif ($ann['category'] === 'infografis'): ?>
-                                        <span class="badge bg-warning text-dark">Infografis</span>
+                                        <span class="badge bg-light text-dark border">Infografis</span>
                                     <?php else: ?>
-                                        <span class="badge bg-info text-white">Edaran Kedinasan</span>
+                                        <span class="badge bg-light text-dark border">Edaran Kedinasan</span>
                                     <?php endif; ?>
                                 </td>
                                 <td class="text-secondary small">
                                     <?= nl2br(htmlspecialchars(mb_strimwidth($ann['content'], 0, 120, '...'))) ?>
                                 </td>
                                 <td class="pe-3 text-center">
-                                    <button class="btn btn-sm btn-outline-warning me-1" data-bs-toggle="modal" data-bs-target="#announcementModal" 
+                                    <button class="btn btn-sm btn-outline-dark me-1" data-bs-toggle="modal" data-bs-target="#announcementModal" 
                                             data-action="edit" data-id="<?= $ann['id'] ?>" data-title="<?= htmlspecialchars($ann['title']) ?>" 
                                             data-category="<?= $ann['category'] ?>"
                                             data-content="<?= htmlspecialchars($ann['content']) ?>">
                                         Edit
                                     </button>
-                                    <a href="?action=delete&id=<?= $ann['id'] ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Hapus informasi ini?')">
+                                    <a href="?action=delete&id=<?= $ann['id'] ?>" class="btn btn-sm btn-outline-dark" onclick="return confirm('Hapus informasi ini?')">
                                         Hapus
                                     </a>
                                 </td>
@@ -185,15 +185,15 @@ $announcements = $stmt->fetchAll();
 
                     <div class="form-check form-switch p-3 bg-light rounded border mb-3">
                         <input class="form-check-input ms-0 me-2" type="checkbox" name="broadcast_wa" id="broadcastWaCheck" value="1" checked>
-                        <label class="form-check-label fw-bold text-success" for="broadcastWaCheck">
-                            <i class="bi bi-whatsapp me-1"></i> Siarkan Notifikasi Otomatis via WhatsApp Gateway
+                        <label class="form-check-label fw-bold text-dark" for="broadcastWaCheck">
+                            Siarkan Notifikasi Otomatis via WhatsApp Gateway
                         </label>
-                        <div class="small text-muted mt-1">Pesan ringkasan pengumuman akan otomatis dikirimkan ke nomor WA seluruh personel aktif.</div>
+                        <div class="small text-muted mt-1">Pesan ringkasan pengumuman akan otomatis dikirimkan ke nomor WhatsApp seluruh personel aktif.</div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary" id="modalSaveBtn">Terbitkan</button>
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-dark btn-sm px-3" id="modalSaveBtn">Terbitkan</button>
                 </div>
             </form>
         </div>

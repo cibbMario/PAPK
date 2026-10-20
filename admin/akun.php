@@ -47,15 +47,15 @@ $pendingTotal = $pdo->query("SELECT COUNT(*) FROM users WHERE status = 'pending'
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <div>
-        <h1 class="h2">Verifikasi & Kelola Akun Pengguna</h1>
+        <h1 class="h2 font-serif fw-bold mb-1">Verifikasi & Kelola Akun Pengguna</h1>
         <p class="text-muted small mb-0">Kelola akun personel dan tinjau pendaftaran akun baru sebelum diberikan hak akses.</p>
     </div>
     <div class="btn-group">
-        <a href="akun.php?status=all" class="btn btn-sm <?= $filter === 'all' ? 'btn-primary' : 'btn-outline-primary' ?>">Semua Akun</a>
-        <a href="akun.php?status=pending" class="btn btn-sm <?= $filter === 'pending' ? 'btn-warning text-dark' : 'btn-outline-warning' ?>">
+        <a href="akun.php?status=all" class="btn btn-sm <?= $filter === 'all' ? 'btn-dark' : 'btn-outline-secondary' ?>">Semua Akun</a>
+        <a href="akun.php?status=pending" class="btn btn-sm <?= $filter === 'pending' ? 'btn-dark' : 'btn-outline-secondary' ?>">
             Antrean Pending (<?= $pendingTotal ?>)
         </a>
-        <a href="akun.php?status=approved" class="btn btn-sm <?= $filter === 'approved' ? 'btn-success' : 'btn-outline-success' ?>">Aktif Disetujui</a>
+        <a href="akun.php?status=approved" class="btn btn-sm <?= $filter === 'approved' ? 'btn-dark' : 'btn-outline-secondary' ?>">Aktif Disetujui</a>
     </div>
 </div>
 
@@ -88,21 +88,21 @@ $pendingTotal = $pdo->query("SELECT COUNT(*) FROM users WHERE status = 'pending'
                                 <td class="small text-secondary"><?= htmlspecialchars($u['email'] ?: '-') ?></td>
                                 <td>
                                     <?php if ($u['linked_name']): ?>
-                                        <span class="text-success small fw-semibold"><i class="bi bi-link-45deg"></i> <?= htmlspecialchars($u['linked_name']) ?></span>
+                                        <span class="text-dark small fw-semibold"><?= htmlspecialchars($u['linked_name']) ?></span>
                                     <?php else: ?>
                                         <span class="text-muted small">Belum tertaut</span>
                                     <?php endif; ?>
                                 </td>
                                 <td>
-                                    <span class="badge <?= $u['role'] === 'admin' ? 'bg-danger' : 'bg-secondary' ?>"><?= strtoupper($u['role']) ?></span>
+                                    <span class="badge <?= $u['role'] === 'admin' ? 'bg-dark text-white' : 'bg-light text-dark border' ?>"><?= strtoupper($u['role']) ?></span>
                                 </td>
                                 <td>
                                     <?php if ($u['status'] === 'pending'): ?>
-                                        <span class="badge bg-warning text-dark"><i class="bi bi-clock-history"></i> Pending</span>
+                                        <span class="badge bg-light text-dark border">Pending</span>
                                     <?php elseif ($u['status'] === 'approved'): ?>
-                                        <span class="badge bg-success"><i class="bi bi-check-circle"></i> Disetujui</span>
+                                        <span class="badge bg-dark text-white">Disetujui</span>
                                     <?php else: ?>
-                                        <span class="badge bg-danger"><i class="bi bi-x-circle"></i> Ditolak</span>
+                                        <span class="badge bg-white text-dark border border-dark">Ditolak</span>
                                     <?php endif; ?>
                                 </td>
                                 <td class="pe-3 text-center">
@@ -110,12 +110,12 @@ $pendingTotal = $pdo->query("SELECT COUNT(*) FROM users WHERE status = 'pending'
                                         <form method="POST" action="akun.php" class="d-inline">
                                             <input type="hidden" name="user_id" value="<?= $u['id'] ?>">
                                             <input type="hidden" name="action" value="approve">
-                                            <button type="submit" class="btn btn-sm btn-success fw-semibold">Setujui</button>
+                                            <button type="submit" class="btn btn-sm btn-dark fw-semibold">Setujui</button>
                                         </form>
                                         <form method="POST" action="akun.php" class="d-inline ms-1">
                                             <input type="hidden" name="user_id" value="<?= $u['id'] ?>">
                                             <input type="hidden" name="action" value="reject">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger">Tolak</button>
+                                            <button type="submit" class="btn btn-sm btn-outline-dark">Tolak</button>
                                         </form>
                                     <?php else: ?>
                                         <?php if ($u['role'] !== 'admin'): ?>

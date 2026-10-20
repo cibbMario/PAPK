@@ -22,51 +22,248 @@ $currentScript = basename($_SERVER['PHP_SELF']);
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>PAPK TNI AU - Portal Perwira Karier</title>
+    <title>PAPK TNI AU — Direktori Perwira Matra Udara</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <!-- Google Fonts: Editorial Serif (Playfair Display) + Geometric Sans (Plus Jakarta Sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        body { padding-top: 4.5rem; background-color: #f8f9fa; }
+        :root {
+            --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+            --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --color-dark: #0f172a;
+            --color-muted: #64748b;
+            --color-border: #e2e8f0;
+            --color-bg: #f8fafc;
+        }
+
+        body { 
+            font-family: var(--font-sans);
+            padding-top: 4.5rem; 
+            background-color: var(--color-bg); 
+            color: var(--color-dark);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .font-serif {
+            font-family: var(--font-serif);
+        }
+
+        .font-sans {
+            font-family: var(--font-sans);
+        }
+
+        /* Top Navbar Bersih & Minimalis */
+        .site-navbar {
+            background-color: #ffffff !important;
+            border-bottom: 1px solid var(--color-border);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        .navbar-brand-editorial {
+            font-family: var(--font-serif);
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--color-dark) !important;
+            letter-spacing: -0.2px;
+        }
+
+        .nav-link-minimal {
+            font-family: var(--font-sans);
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: #475569 !important;
+            padding: 8px 14px !important;
+            border-radius: 6px;
+            transition: color 0.15s ease;
+        }
+
+        .nav-link-minimal:hover {
+            color: var(--color-dark) !important;
+        }
+
+        .nav-link-minimal.active {
+            color: var(--color-dark) !important;
+            font-weight: 700;
+        }
+
+        .user-tag {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #334155;
+            background: #f1f5f9;
+            padding: 4px 10px;
+            border-radius: 4px;
+            border: 1px solid var(--color-border);
+        }
+
+        .btn-logout-minimal {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #64748b;
+            text-decoration: none;
+            padding: 5px 12px;
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            background: #ffffff;
+            transition: all 0.15s ease;
+        }
+
+        .btn-logout-minimal:hover {
+            color: #0f172a;
+            border-color: #94a3b8;
+            background: #f8fafc;
+        }
+
         .sidebar { height: calc(100vh - 4.5rem); position: sticky; top: 4.5rem; overflow-y: auto; }
-        .list-group-item.active { background-color: #1e3c72; border-color: #1e3c72; }
-        .navbar-brand { font-weight: 700; letter-spacing: 0.5px; }
+        .list-group-item.active { background-color: #000000; border-color: #000000; color: #ffffff !important; }
+
+        /* Hitam-Putih Global Theme Overrides */
+        a { color: var(--color-dark); text-decoration: none; }
+        a:hover { color: #000000; }
+
+        .btn-primary, .btn-dark {
+            background-color: #0f172a !important;
+            border-color: #0f172a !important;
+            color: #ffffff !important;
+        }
+        .btn-primary:hover, .btn-dark:hover {
+            background-color: #000000 !important;
+            border-color: #000000 !important;
+            color: #ffffff !important;
+        }
+        .btn-outline-primary, .btn-outline-dark {
+            background-color: transparent !important;
+            border-color: #0f172a !important;
+            color: #0f172a !important;
+        }
+        .btn-outline-primary:hover, .btn-outline-dark:hover {
+            background-color: #0f172a !important;
+            color: #ffffff !important;
+        }
+        .btn-success, .btn-info {
+            background-color: #1e293b !important;
+            border-color: #1e293b !important;
+            color: #ffffff !important;
+        }
+        .btn-warning, .btn-secondary {
+            background-color: #f1f5f9 !important;
+            border-color: #cbd5e1 !important;
+            color: #0f172a !important;
+        }
+        .btn-outline-secondary {
+            border-color: #cbd5e1 !important;
+            color: #475569 !important;
+        }
+        .btn-outline-secondary:hover {
+            background-color: #f1f5f9 !important;
+            color: #0f172a !important;
+        }
+
+        /* Badges: Monochrome */
+        .badge.bg-primary, .badge.bg-dark, .badge.bg-success {
+            background-color: #0f172a !important;
+            color: #ffffff !important;
+            font-weight: 600;
+        }
+        .badge.bg-secondary, .badge.bg-info, .badge.bg-warning, .badge.bg-light {
+            background-color: #f1f5f9 !important;
+            color: #0f172a !important;
+            border: 1px solid #cbd5e1;
+            font-weight: 600;
+        }
+        .badge.bg-danger {
+            background-color: transparent !important;
+            color: #0f172a !important;
+            border: 1px solid #0f172a;
+            font-weight: 600;
+        }
+
+        /* Alerts: Monochrome */
+        .alert {
+            background-color: #ffffff !important;
+            border: 1px solid #cbd5e1 !important;
+            color: #0f172a !important;
+            border-radius: 8px;
+        }
+
+        /* Form Controls */
+        .form-control:focus, .form-select:focus {
+            border-color: #0f172a !important;
+            box-shadow: none !important;
+        }
+
+        /* Pagination */
+        .page-link {
+            color: #0f172a !important;
+            border-color: #e2e8f0 !important;
+        }
+        .page-item.active .page-link {
+            background-color: #0f172a !important;
+            border-color: #0f172a !important;
+            color: #ffffff !important;
+        }
     </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top shadow-sm" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%) !important;">
-  <div class="container-fluid">
-    <a class="navbar-brand d-flex align-items-center" href="dashboard.php">
-      <i class="bi bi-shield-shaded me-2 fs-4"></i>
-      <span>PAPK TNI AU</span>
+
+<nav class="navbar navbar-expand-lg fixed-top site-navbar">
+  <div class="container-fluid px-lg-4">
+    <a class="navbar-brand navbar-brand-editorial" href="dashboard.php">
+      PAPK TNI AU
     </a>
+
+    <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+      <span class="navbar-toggler-icon"></span>
+    </button>
     
     <div class="collapse navbar-collapse" id="navbarMain">
-      <ul class="navbar-nav ms-auto align-items-center">
+      <?php if (!empty($_SESSION['username']) && !$isAdmin): ?>
+        <!-- Menu Navigasi Atas Khusus User: Bersih, Tanpa Ikon / Emoji -->
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3 gap-lg-1">
+          <li class="nav-item">
+            <a class="nav-link-minimal <?= $currentScript == 'dashboard.php' ? 'active' : '' ?>" href="dashboard.php">
+              Direktori Angkatan
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link-minimal <?= $currentScript == 'pengumuman.php' ? 'active' : '' ?>" href="pengumuman.php">
+              Pengumuman
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link-minimal <?= $currentScript == 'profil.php' ? 'active' : '' ?>" href="profil.php">
+              Profil Saya
+            </a>
+          </li>
+        </ul>
+      <?php endif; ?>
+
+      <ul class="navbar-nav ms-auto align-items-center gap-2">
         <?php if (!empty($_SESSION['username'])): ?>
           <?php if (!$isAdmin): ?>
-            <!-- Lonceng Notifikasi User -->
-            <li class="nav-item me-3">
-              <a class="nav-link position-relative text-white" href="notifikasi.php" title="Pusat Notifikasi">
-                <i class="bi bi-bell-fill fs-5"></i>
+            <li class="nav-item">
+              <a class="nav-link-minimal position-relative" href="notifikasi.php">
+                Notifikasi
                 <?php if ($unreadNotifCount > 0): ?>
-                  <span class="position-absolute top-1 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 10px;">
-                    <?= $unreadNotifCount ?>
-                  </span>
+                  <span class="badge bg-dark text-white rounded-pill ms-1" style="font-size: 10px;"><?= $unreadNotifCount ?></span>
                 <?php endif; ?>
               </a>
             </li>
           <?php endif; ?>
-          <li class="nav-item me-3">
-            <span class="badge bg-light text-dark px-2 py-1">
-              <i class="bi bi-person-circle me-1"></i> <?= htmlspecialchars($_SESSION['username']) ?> (<?= strtoupper($_SESSION['role'] ?? 'USER') ?>)
+          <li class="nav-item">
+            <span class="user-tag">
+              <?= htmlspecialchars($_SESSION['username']) ?>
             </span>
           </li>
           <li class="nav-item">
-            <a class="btn btn-outline-light btn-sm" href="../logout.php">
-              <i class="bi bi-box-arrow-right me-1"></i> Logout
+            <a class="btn-logout-minimal" href="../logout.php">
+              Keluar
             </a>
           </li>
         <?php endif; ?>
@@ -75,51 +272,42 @@ $currentScript = basename($_SERVER['PHP_SELF']);
   </div>
 </nav>
 
+<?php if ($isAdmin): ?>
+<!-- Layout Admin (Sidebar Khusus Pengelolaan) -->
 <div class="container-fluid">
   <div class="row">
-    <nav class="col-md-3 col-lg-2 bg-white sidebar py-3 border-end shadow-sm">
+    <nav class="col-md-3 col-lg-2 bg-white sidebar py-3 border-end">
       <div class="list-group list-group-flush">
-        <?php if ($isAdmin): ?>
-          <small class="text-muted fw-bold px-3 mb-2 text-uppercase" style="font-size: 11px;">Data & Operasional</small>
-          <a href="dashboard.php" class="list-group-item list-group-item-action <?= $currentScript == 'dashboard.php' ? 'active' : '';?>">
-            <i class="bi bi-people me-2"></i> Data Anggota & Peta
-          </a>
-          <a href="talent-pool.php" class="list-group-item list-group-item-action <?= $currentScript == 'talent-pool.php' ? 'active' : '';?>">
-            <i class="bi bi-mortarboard me-2"></i> Talent Pool & Kompetensi
-          </a>
-          <a href="gateway.php" class="list-group-item list-group-item-action <?= $currentScript == 'gateway.php' ? 'active' : '';?>">
-            <i class="bi bi-whatsapp me-2 text-success"></i> WhatsApp & Gateway
-          </a>
-          <a href="pengajuan.php" class="list-group-item list-group-item-action <?= $currentScript == 'pengajuan.php' ? 'active' : '';?>">
-            <i class="bi bi-check-circle me-2"></i> Pengajuan Perubahan
-          </a>
+        <small class="text-muted fw-bold px-3 mb-2 text-uppercase" style="font-size: 11px;">Data & Operasional</small>
+        <a href="dashboard.php" class="list-group-item list-group-item-action <?= $currentScript == 'dashboard.php' ? 'active' : '';?>">
+          Data Anggota & Peta
+        </a>
+        <a href="talent-pool.php" class="list-group-item list-group-item-action <?= $currentScript == 'talent-pool.php' ? 'active' : '';?>">
+          Talent Pool & Kompetensi
+        </a>
+        <a href="gateway.php" class="list-group-item list-group-item-action <?= $currentScript == 'gateway.php' ? 'active' : '';?>">
+          WhatsApp & Gateway
+        </a>
+        <a href="pengajuan.php" class="list-group-item list-group-item-action <?= $currentScript == 'pengajuan.php' ? 'active' : '';?>">
+          Pengajuan Perubahan
+        </a>
 
-          <small class="text-muted fw-bold px-3 mt-3 mb-2 text-uppercase" style="font-size: 11px;">Publikasi & Akun</small>
-          <a href="pengumuman.php" class="list-group-item list-group-item-action <?= $currentScript == 'pengumuman.php' ? 'active' : '';?>">
-            <i class="bi bi-megaphone me-2"></i> Pengumuman & Berita
-          </a>
-          <a href="akun.php" class="list-group-item list-group-item-action <?= $currentScript == 'akun.php' ? 'active' : '';?>">
-            <i class="bi bi-person-check me-2"></i> Verifikasi Akun
-          </a>
-          <a href="import-export.php" class="list-group-item list-group-item-action <?= $currentScript == 'import-export.php' ? 'active' : '';?>">
-            <i class="bi bi-file-earmark-spreadsheet me-2"></i> Export/Import Data
-          </a>
-        <?php else: ?>
-          <small class="text-muted fw-bold px-3 mb-2 text-uppercase" style="font-size: 11px; letter-spacing: 0.5px;">Portal Personel</small>
-          <a href="dashboard.php" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center <?= $currentScript == 'dashboard.php' ? 'active' : '';?>">
-            <div><i class="bi bi-people-fill me-2"></i> Direktori Angkatan</div>
-            <span class="badge bg-light text-primary border rounded-pill" style="font-size: 10px;">92</span>
-          </a>
-          <a href="profil.php" class="list-group-item list-group-item-action <?= $currentScript == 'profil.php' ? 'active' : '';?>">
-            <i class="bi bi-person-circle me-2"></i> Profil & Data Saya
-          </a>
-          <a href="kartu-anggota.php" class="list-group-item list-group-item-action <?= $currentScript == 'kartu-anggota.php' ? 'active' : '';?>">
-            <i class="bi bi-credit-card-2-front me-2"></i> KTA Digital
-          </a>
-          <a href="pengumuman.php" class="list-group-item list-group-item-action <?= $currentScript == 'pengumuman.php' ? 'active' : '';?>">
-            <i class="bi bi-megaphone me-2"></i> Pengumuman Dinas
-          </a>
-        <?php endif; ?>
+        <small class="text-muted fw-bold px-3 mt-3 mb-2 text-uppercase" style="font-size: 11px;">Publikasi & Akun</small>
+        <a href="pengumuman.php" class="list-group-item list-group-item-action <?= $currentScript == 'pengumuman.php' ? 'active' : '';?>">
+          Pengumuman & Berita
+        </a>
+        <a href="akun.php" class="list-group-item list-group-item-action <?= $currentScript == 'akun.php' ? 'active' : '';?>">
+          Verifikasi Akun
+        </a>
+        <a href="import-export.php" class="list-group-item list-group-item-action <?= $currentScript == 'import-export.php' ? 'active' : '';?>">
+          Export/Import Data
+        </a>
       </div>
     </nav>
     <main class="col-md-9 col-lg-10 px-md-4 py-3">
+<?php else: ?>
+<!-- Layout User (Simpel, Terpusat, Editorial & Bersih) -->
+<div class="container-xl">
+  <div class="row justify-content-center">
+    <main class="col-12 py-3">
+<?php endif; ?>
